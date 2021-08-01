@@ -85,10 +85,19 @@ class Schedule(db.Model):
 
 class Schedulemd5(db.Model):
     md5 = db.Column(db.String(32), primary_key=True)
-    stationid = db.Column(db.Integer)
+    stationid = db.ForeignKey("station.stationid", nullable=False)
     datestr = db.Column(db.String(64))
     datets = db.Column(db.Integer)
     modified = db.Column(db.Integer)
 
     def __repr__(self):
         return f"<Schedulemd5 {self.stationid}/{self.md5}/{self.modified}>"
+
+
+class User(db.Model):
+    uid = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True, nullable=False)
+    password = db.Column(db.String(64), nullable=False)
+
+    def __repr__(self):
+        return f"<User {self.uid}, {self.name}>"

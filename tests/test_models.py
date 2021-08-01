@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from tvguide.models import Station, Program, Schedule
+from tvguide.models import Station, Program, Schedule, Schedulemd5, User
 
 
 def test_station():
@@ -19,3 +19,8 @@ def test_schedule():
     now = datetime.utcnow()
     s = Schedule(programid=1, stationid=1, md5="deadbeef", airdate=now, duration=1)
     assert f"{s}" == f"<Schedule 1/1/{now}/1>"
+
+
+def test_user():
+    u = User(name="chris", password="wibble")
+    assert f"{u}" == f"<User None, chris>"

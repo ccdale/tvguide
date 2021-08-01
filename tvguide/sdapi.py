@@ -20,6 +20,9 @@
 Mainly coding ideas from https://github.com/essandess/sd-py
 re-written in my coding style, with added token caching/renewing
 Thankyou Steven T. Smith.
+
+This implements a REST connection to the API documented here:
+https://github.com/SchedulesDirect/JSON-Service/wiki/API-20141201
 """
 
 import datetime

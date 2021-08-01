@@ -17,6 +17,7 @@
 
 """TVGuide flask application."""
 
+from datetime import datetime
 import logging
 import logging.handlers
 import os
@@ -65,6 +66,16 @@ def errorExit(exci, e):
     sys.exit(1)
 
 
+def convertTimeString(timestring, dtformat="%Y-%m-%dT%H:%M:%SZ", asts=False):
+    try:
+        dt = datetime.strptime(timestring, dtformat)
+        if asts:
+            dt = int(dt.timestamp())
+        return dt
+    except Exception as e:
+        errorRaise(sys.exc_info()[2], e)
+
+
 def create_app(testconfig=None):
     try:
         log.info(f"creating application version {__version__}")
@@ -80,7 +91,7 @@ def create_app(testconfig=None):
         app = Flask(__name__, instance_relative_config=True)
         app.config.from_mapping(
             SECRET_KEY="dev",
-            DATABASE=os.path.join(app.instance_path, "flaskr.sqlite"),
+            DATABASE=os.path.join(app.instance_path, "tvguide.db"),
         )
         if testconfig is None:
             # load the instance config, if it exists, when not testing
@@ -96,6 +107,11 @@ def create_app(testconfig=None):
 
         # initialise the db class
         db.init_app(app)
+
+        # auth blueprint
+        from . import auth
+
+        app.register_blueprint(auth.bp)
 
         # a simple page that says the app is healthy
         @app.route("/health")
