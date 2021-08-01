@@ -35,7 +35,7 @@ log.addHandler(syslog)
 log.propagate = False
 log.setLevel(logging.INFO)
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 db = SQLAlchemy()
 
