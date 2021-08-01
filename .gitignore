@@ -9,4 +9,4 @@ docs/_build
 .coverage
 htmlcov
 coverage.xml
-instanc/
+instance/
