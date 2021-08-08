@@ -29,8 +29,7 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from tvguide import db
-from tvguide.errors import errorNotify
+from tvguide import db, errorNotify
 from tvguide.models import User
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")

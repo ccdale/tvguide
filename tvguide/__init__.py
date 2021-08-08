@@ -26,8 +26,6 @@ import sys
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-from .errors import errorExit
-
 
 log = logging.getLogger(__name__)
 syslog = logging.handlers.SysLogHandler(address="/dev/log")
@@ -40,6 +38,32 @@ log.setLevel(logging.INFO)
 __version__ = "0.1.2"
 
 db = SQLAlchemy()
+
+
+def errorRaise(exci, e):
+    lineno = exci.tb_lineno
+    fname = exci.tb_frame.f_code.co_name
+    ename = type(e).__name__
+    msg = f"{ename} Exception at line {lineno} in function {fname}: {e}"
+    log.error(msg)
+    raise
+
+
+def errorNotify(exci, e):
+    lineno = exci.tb_lineno
+    fname = exci.tb_frame.f_code.co_name
+    ename = type(e).__name__
+    msg = f"{ename} Exception at line {lineno} in function {fname}: {e}"
+    log.error(msg)
+
+
+def errorExit(exci, e):
+    lineno = exci.tb_lineno
+    fname = exci.tb_frame.f_code.co_name
+    ename = type(e).__name__
+    msg = f"{ename} Exception at line {lineno} in function {fname}: {e}"
+    log.error(msg)
+    sys.exit(1)
 
 
 def convertTimeString(timestring, dtformat="%Y-%m-%dT%H:%M:%SZ", asts=False):
