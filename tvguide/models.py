@@ -39,7 +39,7 @@ class Station(db.Model):
     channelnumber = db.Column(db.Integer, nullable=True)
 
     def __repr__(self):
-        return f"<Station {self.name}>"
+        return f"Station(name='{self.name}')"
 
 
 class Person(db.Model):
@@ -48,7 +48,7 @@ class Person(db.Model):
     nameid = db.Column(db.Integer, nullable=True)
 
     def __repr__(self):
-        return f"<Person {self.name}>"
+        return f"Person(name='{self.name}')"
 
 
 class Program(db.Model):
@@ -63,9 +63,7 @@ class Program(db.Model):
     episode = db.Column(db.Integer, nullable=True)
 
     def __repr__(self):
-        return (
-            f"<Program {self.title}, {self.series}/{self.episode}, {self.episodetitle}>"
-        )
+        return f"Program(title='{self.title}', series={self.series}, episode={self.episode}, episodetitle='{self.episodetitle}')"
 
 
 class Schedule(db.Model):
@@ -80,18 +78,18 @@ class Schedule(db.Model):
     duration = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
-        return f"<Schedule {self.programid}/{self.stationid}/{self.airdate}/{self.duration}>"
+        return f"Schedule(programid='{self.programid}', stationid={self.stationid}, md5='{self.md5}', airdate={self.airdate}, duration={self.duration})"
 
 
 class Schedulemd5(db.Model):
     md5 = db.Column(db.String(32), primary_key=True)
     stationid = db.ForeignKey("station.stationid", nullable=False)
-    datestr = db.Column(db.String(64))
-    datets = db.Column(db.Integer)
-    modified = db.Column(db.Integer)
+    datestr = db.Column(db.DateTime, nullable=False)
+    datets = db.Column(db.Integer, nullable=False)
+    modified = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):
-        return f"<Schedulemd5 {self.stationid}/{self.md5}/{self.modified}>"
+        return f"Schedulemd5(stationid={self.stationid}, md5='{self.md5}', modified={self.modified})"
 
 
 class User(db.Model):
@@ -100,4 +98,4 @@ class User(db.Model):
     password = db.Column(db.String(64), nullable=False)
 
     def __repr__(self):
-        return f"<User {self.uid}, {self.name}>"
+        return f"User(uid={self.uid}, name='{self.name}')"
