@@ -31,23 +31,13 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from tvguide import db, errorNotify
 from tvguide.models import User
-from tvguide.forms import RegistrationForm, LoginForm
 
-bp = Blueprint("auth", __name__, url_prefix="/auth")
+bp = Blueprint("guide", __name__)
 
 
-@bp.route("/register", methods=("GET", "POST"))
+@bp.route("/", methods=["GET"])
 def register():
     try:
-        form = RegistrationForm()
-        if request.method == "POST":
-            u = User()
-            u.name = request.form["username"]
-            u.password = generate_password_hash(request.form["password"])
-            # need to work out what to do here
-            # to commit the user to the db
-            # db.add(u)
-            # db.commit()
-        return render_template("auth/register.html")
+        return render_template("home.html")
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)

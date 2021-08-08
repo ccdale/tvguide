@@ -110,8 +110,10 @@ def create_app(testconfig=None):
 
         # auth blueprint
         from . import auth
+        from . import guide
 
         app.register_blueprint(auth.bp)
+        app.register_blueprint(guide.bp)
 
         # a simple page that says the app is healthy
         @app.route("/health")
