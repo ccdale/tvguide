@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>TV Guide</h1>
+    <div>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset>
+                <legend>TV Guide Login</legend>
+                <div>
+                    {{ form.username.label() }}
+                    {{ form.username() }}
+                </div>
+                <div>
+                    {{ form.password.label() }}
+                    {{ form.password() }}
+                </div>
+                <div>
+                    {{ form.remember.label() }}
+                    {{ form.remember() }}
+                </div>
+            </fieldset>
+            <div>
+                {{ form.submit() }}
+            </div>
+        </form>
+        <div>
+            <a href="{{ url_for('auth.register') }}">Click here to register</a>
+        </div>
+    </div>
+{% endblock content %}
+

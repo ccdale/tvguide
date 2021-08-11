@@ -1,6 +1,55 @@
 {% extends "layout.html" %}
 {% block content %}
-<h1>TV Guide</h1>
-<div>Register</div>
+    <h1>TV Guide</h1>
+    <div>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset>
+                <legend>TV Guide Register</legend>
+                <p>Register with your Schedules Direct Username and Password.</p>
+                <p>These credentials will be used to login to your Schedules Direct account via the SD API.</p>
+                <p>The credentials will be encrypted before storage.</p>
+                <div>
+                    {{ form.username.label() }}
+                    {{ form.username() }}
+                    {% if form.username.errors %}
+                        <div class="errordiv inputerror">
+                        {% for error in form.username.errors %}
+                            <span class="errorspan">{{ error }}</span>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.password.label() }}
+                    {{ form.password() }}
+                    {% if form.password.errors %}
+                        <div class="errordiv inputerror">
+                        {% for error in form.password.errors %}
+                            <span class="errorspan">{{ error }}</span>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.cpassword.label() }}
+                    {{ form.cpassword() }}
+                    {% if form.cpassword.errors %}
+                        <div class="errordiv inputerror">
+                        {% for error in form.cpassword.errors %}
+                            <span class="errorspan">{{ error }}</span>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div>
+                {{ form.submit() }}
+            </div>
+        </form>
+        <div>
+            Already registered? <a href="{{ url_for('auth.login') }}">Login</a>
+        </div>
+    </div>
 {% endblock content %}
 

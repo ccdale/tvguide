@@ -15,6 +15,7 @@
 #     You should have received a copy of the GNU General Public License
 #     along with tvguide.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
 import functools
 
 from flask import (
@@ -36,7 +37,7 @@ bp = Blueprint("guide", __name__)
 
 
 @bp.route("/", methods=["GET"])
-def register():
+def home():
     try:
         return render_template("home.html")
     except Exception as e:

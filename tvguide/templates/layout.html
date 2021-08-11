@@ -9,6 +9,17 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tvg.css') }}">
 </head>
 <body>
+    <div class="flashdiv">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for cat, msg in messages %}
+                    <div class="alert alert-{{ cat }}">
+                        {{ msg }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
     <div class="contentdiv">
         {% block content %} {% endblock content %}
     </div>
