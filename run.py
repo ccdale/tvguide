@@ -1,4 +1,3 @@
-#!/bin/bash
 # Copyright (c) 2021, Christopher Allison
 #
 #     This file is part of tvguide.
@@ -16,9 +15,28 @@
 #     You should have received a copy of the GNU General Public License
 #     along with tvguide.  If not, see <http://www.gnu.org/licenses/>.
 
-set -e
+from pathlib import Path
+import sys
 
-# export FLASK_APP=tvguide
-export FLASK_ENV=development
-# poetry run flask run
-poetry run python run.py
+from tvguide import makeApp, db, log, errorNotify
+
+
+app = makeApp()
+
+
+def letsGo():
+    try:
+        with app.app_context():
+            dbpath = Path(app.config["DATABASE"])
+            log.warning(f"looking for database at: {dbpath}")
+            if not dbpath.is_file():
+                log.warning(f"Creating db at {dbpath}")
+                db.create_all()
+            log.info("running application")
+            app.run(host="0.0.0.0")
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
+if __name__ == "__main__":
+    letsGo()

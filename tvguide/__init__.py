@@ -73,10 +73,11 @@ def convertTimeString(timestring, dtformat="%Y-%m-%dT%H:%M:%SZ", asts=False):
             dt = int(dt.timestamp())
         return dt
     except Exception as e:
-        errorRaise(sys.exc_info()[2], e)
+        errorNotify(sys.exc_info()[2], e)
 
 
-def create_app(testconfig=None):
+def makeApp(testconfig=None):
+    global db
     try:
         log.info(f"creating application version {__version__}")
         # set log level if we are in development
@@ -108,18 +109,18 @@ def create_app(testconfig=None):
         # initialise the db class
         db.init_app(app)
 
-        # auth blueprint
-        from . import auth
-        from . import guide
+        with app.app_context():
+            from . import auth
+            from . import guide
 
-        app.register_blueprint(auth.bp)
-        app.register_blueprint(guide.bp)
+            app.register_blueprint(auth.bp)
+            app.register_blueprint(guide.bp)
 
-        # a simple page that says the app is healthy
-        @app.route("/health")
-        def hello():
-            return "OK"
+            # a simple page that says the app is healthy
+            @app.route("/health")
+            def hello():
+                return "OK"
 
-        return app
+            return app
     except Exception as e:
         errorExit(sys.exc_info()[2], e)
