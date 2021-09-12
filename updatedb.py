@@ -21,6 +21,8 @@ from pathlib import Path
 import sys
 
 from tvguide import makeApp, db, log, errorNotify, errorExit
+from tvguide.config import Configuration
+from tvguide.credential import Credential
 
 
 app = makeApp()
@@ -33,7 +35,8 @@ def updateDB():
             log.debug(f"looking for database at: {dbpath}")
             if not dbpath.is_file():
                 raise Exception(f"failed to find a database at: {dpbath}")
-        log.info(f"I'm here so the dbpath must be correct {dbpath}")
+        log.debug(f"I'm here so the dbpath must be correct {dbpath}")
+        cfg = Configuration(appname="tvguide")
     except Exception as e:
         errorExit(sys.exc_info()[2], e)
 

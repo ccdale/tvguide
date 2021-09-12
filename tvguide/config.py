@@ -58,3 +58,9 @@ class Configuration:
             self.config["amdirty"] = True
         except Exception as e:
             errorRaise(sys.exc_info()[2], e)
+
+    def get(self, value, default=None):
+        try:
+            return self.config.get(value, default)
+        except Exception as e:
+            errorNotify(sys.exc_info()[2], e)
