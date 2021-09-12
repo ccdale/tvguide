@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tvguide"
-version = "0.1.5"
+version = "0.1.6"
 description = "Schedules Direct based Television Guide."
 authors = ["ccdale <chris.charles.allison+tvguide@gmail.com>"]
 readme = "README.md"
@@ -12,6 +12,8 @@ python = "^3.8"
 Flask = "^2.0.1"
 Flask-SQLAlchemy = "^2.5.1"
 Flask-WTF = "^0.15.1"
+keyring = "^23.2.0"
+pyaml = "^21.8.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
