@@ -22,16 +22,20 @@ import logging
 import logging.handlers
 import os
 import sys
+from systemd.journal import JournalHandler
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 
 log = logging.getLogger(__name__)
-syslog = logging.handlers.SysLogHandler(address="/dev/log")
+jlog = JournalHandler()
+# syslog = logging.handlers.SysLogHandler(address="/dev/log")
 formatter = logging.Formatter("%(levelname)s - %(message)s")
-syslog.setFormatter(formatter)
-log.addHandler(syslog)
+# syslog.setFormatter(formatter)
+jlog.setFormatter(formatter)
+# log.addHandler(syslog)
+log.addHandler(jlog)
 log.propagate = False
 log.setLevel(logging.INFO)
 
