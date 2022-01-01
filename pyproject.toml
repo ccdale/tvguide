@@ -14,6 +14,7 @@ Flask-SQLAlchemy = "^2.5.1"
 Flask-WTF = "^0.15.1"
 keyring = "^23.2.0"
 pyaml = "^21.8.3"
+requests = "^2.26.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

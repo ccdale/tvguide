@@ -23,9 +23,28 @@ import sys
 from tvguide import makeApp, db, log, errorNotify, errorExit
 from tvguide.config import Configuration
 from tvguide.credential import Credential
+from tvguide.sdapi import SDApi
 
 
 app = makeApp()
+
+
+def makeSD(cfg):
+    try:
+        keys = ["username", "token", "tokenexpires"]
+        kwargs = {}
+        for key in keys:
+            kwargs[key] = cfg.get(key)
+        cred = Credential(kwargs["username"], cfg.get("host"))
+        kwargs["password"] = cred.getPassword()
+        kwargs["debug"] = True
+        sd = SDApi(**kwargs)
+        sd.apiOnline()
+        if not sd.online:
+            raise Exception("Schedules Direct does not appear to be online.")
+        return sd
+    except Exception as e:
+        errorExit(sys.exc_info()[2], e)
 
 
 def updateDB():
@@ -37,6 +56,14 @@ def updateDB():
                 raise Exception(f"failed to find a database at: {dpbath}")
         log.debug(f"I'm here so the dbpath must be correct {dbpath}")
         cfg = Configuration(appname="tvguide")
+        log.debug(cfg.config)
+        sd = makeSD(cfg)
+        log.debug("Alls good, sd is online")
+        # code goes here
+        cfg.update("token", sd.token)
+        cfg.update("tokenexpires", sd.tokenexpires)
+        log.debug("writing config")
+        cfg.writeConfig()
     except Exception as e:
         errorExit(sys.exc_info()[2], e)
 

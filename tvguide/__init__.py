@@ -59,6 +59,7 @@ def errorNotify(exci, e):
     ename = type(e).__name__
     msg = f"{ename} Exception at line {lineno} in function {fname}: {e}"
     log.error(msg)
+    return msg
 
 
 def errorExit(exci, e):
@@ -93,7 +94,7 @@ def makeApp(testconfig=None):
             log.setLevel(logging.WARNING)
             log.warning("Warning level logging enabled (production instance).")
         # create and configure the app
-        app = Flask(__name__, instance_relative_config=True)
+        app = Flask("tvguide", instance_relative_config=True)
         app.config.from_mapping(
             SECRET_KEY="dev",
             DATABASE=os.path.join(app.instance_path, "tvguide.db"),

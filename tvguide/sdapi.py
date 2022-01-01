@@ -32,9 +32,9 @@ import time
 
 import requests
 
-import ptvg
+import tvguide
 
-log = ptvg.log
+log = tvguide.log
 
 
 # when the 20191022 api is out of beta the default url should be:
@@ -48,7 +48,7 @@ class SDApi:
         self,
         username="",
         password="",
-        appname="ptvg",
+        appname="tvguide",
         # url="https://w8xmzqba6c.execute-api.us-east-1.amazonaws.com/20191022",
         # url="https://json.schedulesdirect.org/20191022",
         url="https://json.schedulesdirect.org/20141201",
@@ -73,7 +73,7 @@ class SDApi:
             self.appname = appname
             self.url = url
             self.debug = debug
-            self.headers = {"User-Agent": f"{appname} / {ptvg.__version__}"}
+            self.headers = {"User-Agent": f"{appname} / {tvguide.__version__}"}
             self.token = token
             self.tokenexpires = tokenexpires
             self.online = False

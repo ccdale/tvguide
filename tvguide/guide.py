@@ -39,6 +39,14 @@ bp = Blueprint("guide", __name__)
 @bp.route("/", methods=["GET"])
 def home():
     try:
-        return render_template("home.html")
+        return render_template("tvhome.html")
     except Exception as e:
-        errorNotify(sys.exc_info()[2], e)
+        return errorNotify(sys.exc_info()[2], e)
+
+
+@bp.route("/about", methods=["GET"])
+def about():
+    try:
+        return render_template("tvabout.html")
+    except Exception as e:
+        return errorNotify(sys.exc_info()[2], e)
