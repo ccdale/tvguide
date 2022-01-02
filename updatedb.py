@@ -57,7 +57,81 @@ def getRMap(xmap):
         errorNotify(sys.exc_info()[2], e)
 
 
-def createChannels():
+def updatePrograms(sd, plist):
+    """Retrieves information for each program in the list"""
+    try:
+        if len(plist) == 0:
+            raise Exception("updatePrograms: received empty list")
+        progs = sd.getPrograms(plist)
+        [updateProgram(prog) for prog in progs]
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+def extractString(xlist, key):
+    try:
+        for item in xlist:
+            if key in item:
+                return item[key]
+        log.warning(f"{key} not found in {xlist}")
+        return None
+    except Exception as e:
+    errorNotify(sys.exc_info()[2], e)
+
+def extractSeries(mdata):
+    try:
+        series = episode = 0
+        for item in mdata:
+            series = int(item["Gracenote"]["season"])
+            episode = int(item["Gracenote"]["episode"])
+        return (series, episode)
+    except Exception as e:
+    errorNotify(sys.exc_info()[2], e)
+
+def setProgData(eprog, prog):
+    try:
+        eprog.md5 = prog["md5"]
+        eprog.title = extractString(prog["titles"], "title120")
+        eprog.episodetitle = prog["episodeTitle150"]
+        eprog.shortdesc = extractString(prog["descriptions"], "description1000")
+        eprog.originalairdate = prog["originalAirDate"]
+        eprog.series, prog.episode = extractSeries(prog["metadata"])
+        return eprog
+    except Exception as e:
+    errorNotify(sys.exc_info()[2], e)
+
+
+def updateProgram(prog):
+    """Updates/Creates one program information
+
+    see
+    https://github.com/SchedulesDirect/JSON-Service/wiki/API-20141201#download-program-information
+
+    TODO: update / create cast mapping
+    """
+    try:
+        progid = prog["programID"]
+        eprog = Program.query.filter_by(programid=progid).first()
+        if eprog:
+            if eprog.md5 == prog["md5"]:
+                return None
+            else:
+                eprog = setProgData(eprog, prog)
+                db.session.commit()
+        else:
+            kwargs = {"programid": progid}
+            kwargs["title"] = extractString(prog["titles"], "title120")
+            kwargs["episodetitle"] = prog["episodeTitle150"]
+            kwargs["shortdesc"] = extractString(prog["descriptions"], "description1000")
+            kwargs["originalairdate"] = prog["originalAirDate"]
+            kwargs["series"], kwargs["episode"] = extractSeries(prog["metadata"])
+            eprog = Program(**kwargs)
+            db.session.add(eprog)
+            db.session.commit()
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
+def updateChannels():
     try:
         with open("/home/chris/tmp/lineups.json", "r") as ifn:
             xdict = json.load(ifn)
@@ -135,7 +209,7 @@ def updateDB():
                 raise Exception(f"failed to find a database at: {dpbath}")
             # if we've changed the models then (re)create the tables
             db.create_all()
-            createChannels()
+            updateChannels()
         # log.debug(f"I'm here so the dbpath must be correct {dbpath}")
         # cfg = Configuration(appname="tvguide")
         # log.debug(cfg.config)
