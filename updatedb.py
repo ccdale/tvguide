@@ -64,6 +64,8 @@ def createChannels():
         rmap = getRMap(xdict["map"])
         labels = ["name", "callsign"]
         llabs = ["height", "width", "category", "md5", "source"]
+        existstation = createdstation = 0
+        existlogo = createdlogo = 0
         for station in xdict["stations"]:
             stationid = int(station["stationID"])
             if not Station.query.filter_by(stationid=stationid).first():
@@ -71,16 +73,27 @@ def createChannels():
                 kwargs["stationid"] = stationid
                 kwargs["channelnumber"] = rmap[stationid]
                 stat = Station(**kwargs)
-                log.info(f"Inserting {stat=}")
+                # log.info(f"Inserting {stat=}")
                 db.session.add(stat)
-            for logo in station["stationLogo"]:
-                if not Logo.query.filter_by(md5=logo["md5"]).first():
-                    kwargs = {key: logo[key] for key in llabs}
-                    kwargs["url"] = logo["URL"]
-                    ologo = Logo(**kwargs)
-                    log.info(f"Inserting {ologo}")
-                    db.session.add(ologo)
+                createdstation += 1
+            else:
+                existstation += 1
+            if "stationLogo" in station:
+                for logo in station["stationLogo"]:
+                    if not Logo.query.filter_by(md5=logo["md5"]).first():
+                        kwargs = {key: logo[key] for key in llabs}
+                        kwargs["url"] = logo["URL"]
+                        ologo = Logo(**kwargs)
+                        # log.info(f"Inserting {ologo}")
+                        db.session.add(ologo)
+                        createdlogo += 1
+                    else:
+                        existlogo += 1
         db.session.commit()
+        log.info(
+            f"Channels inserted: {createdstation}, Existing Channels: {existstation}"
+        )
+        log.info(f"Logos inserted: {createdlogo}, Existing Logos: {existlogo}")
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 

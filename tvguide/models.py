@@ -66,6 +66,16 @@ class Program(db.Model):
         return f"Program(title='{self.title}', series={self.series}, episode={self.episode}, episodetitle='{self.episodetitle}')"
 
 
+class CastMap(db.Model):
+    programid = db.Column(db.String(32), nullable=False)
+    personid = db.Column(db.Integer, nullable=False)
+    role = db.Column(db.String(64), nullable=False)
+    billingorder = db.Column(db.String(10), nullable=True)
+
+    def __repr__(self):
+        return f"CastMap(programid={self.programid}, personid={self.personid}, role={self.role}, billingorder={self.billingorder})"
+
+
 class Schedule(db.Model):
     md5 = db.Column(db.String(32), primary_key=True)
     programid = db.Column(
