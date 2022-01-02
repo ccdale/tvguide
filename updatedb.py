@@ -68,12 +68,12 @@ def createChannels():
             stationid = int(station["stationID"])
             if not Station.query.filter_by(stationid=stationid).first():
                 kwargs = {key: station[key] for key in labels}
-                kwargs["stationid"] = stationid)
+                kwargs["stationid"] = stationid
                 kwargs["channelnumber"] = rmap[stationid]
                 stat = Station(**kwargs)
                 log.info(f"Inserting {stat=}")
                 db.session.add(stat)
-            for logo in xdict["stationLogo"]:
+            for logo in station:
                 if not Logo.query.filter_by(md5=logo["md5"]).first():
                     kwargs = {key: logo[key] for key in llabs}
                     kwargs["url"] = logo["URL"]
