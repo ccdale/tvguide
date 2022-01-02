@@ -25,7 +25,15 @@ import sys
 from tvguide import makeApp, db, log, errorNotify, errorExit
 from tvguide.config import Configuration
 from tvguide.credential import Credential
-from tvguide.models import Schedule, Schedulemd5, Station, Person, Program, Logo
+from tvguide.models import (
+    Schedule,
+    Schedulemd5,
+    Station,
+    Person,
+    Program,
+    Logo,
+    CastMap,
+)
 from tvguide.sdapi import SDApi
 
 
@@ -67,6 +75,7 @@ def updatePrograms(sd, plist):
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 
+
 def extractString(xlist, key):
     try:
         for item in xlist:
@@ -75,7 +84,8 @@ def extractString(xlist, key):
         log.warning(f"{key} not found in {xlist}")
         return None
     except Exception as e:
-    errorNotify(sys.exc_info()[2], e)
+        errorNotify(sys.exc_info()[2], e)
+
 
 def extractSeries(mdata):
     try:
@@ -85,7 +95,8 @@ def extractSeries(mdata):
             episode = int(item["Gracenote"]["episode"])
         return (series, episode)
     except Exception as e:
-    errorNotify(sys.exc_info()[2], e)
+        errorNotify(sys.exc_info()[2], e)
+
 
 def setProgData(eprog, prog):
     try:
@@ -97,30 +108,45 @@ def setProgData(eprog, prog):
         eprog.series, prog.episode = extractSeries(prog["metadata"])
         return eprog
     except Exception as e:
-    errorNotify(sys.exc_info()[2], e)
+        errorNotify(sys.exc_info()[2], e)
+
 
 def addUpdatePersonMap(personid, programid, role, billingorder):
     try:
-        cm = CastMap.query.filter_by(programid=programid, personid=personid, role=role, billingorder=billingorder).first()
+        cm = CastMap.query.filter_by(
+            programid=programid, personid=personid, role=role, billingorder=billingorder
+        ).first()
         if not cm:
-            kwargs = {"programid": programid, "personid": personid, "role": role, "billingorder": billingorder}
+            kwargs = {
+                "programid": programid,
+                "personid": personid,
+                "role": role,
+                "billingorder": billingorder,
+            }
             cm = CastMap(**kwargs)
             db.session.add(cm)
             db.session.commit()
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 
-def addUpdatePerson(person, programid, role, billingorder):
+
+def addUpdatePerson(person, programid):
     try:
         per = Person.query.filter_by(personid=person["personId"]).first()
         if not per:
-            kwargs = {"personid": person["personId"], name: person["name"], nameid: person["nameId"]}
+            kwargs = {
+                "personid": person["personId"],
+                name: person["name"],
+                nameid: person["nameId"],
+            }
             per = Person(**kwargs)
             db.session.add(per)
             db.session.commit()
-        addUpdatePersonMap(per.personid, programid, role, billingorder)
+        addUpdatePersonMap(
+            per.personid, programid, person["role"], person["billingorder"]
+        )
     except Exception as e:
-    errorNotify(sys.exc_info()[2], e)
+        errorNotify(sys.exc_info()[2], e)
 
 
 def addUpdateProgram(prog):
@@ -149,6 +175,8 @@ def addUpdateProgram(prog):
             eprog = Program(**kwargs)
             db.session.add(eprog)
             db.session.commit()
+        [addUpdatePerson(item, programid) for item in prog["cast"]]
+        [addUpdatePerson(item, programid) for item in prog["crew"]]
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 
