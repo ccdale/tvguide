@@ -114,6 +114,9 @@ def makeApp(testconfig=None):
         # initialise the db class
         db.init_app(app)
 
+        # if we've changed the models then (re)create the tables
+        db.create_all()
+
         with app.app_context():
             from . import auth
             from . import guide
