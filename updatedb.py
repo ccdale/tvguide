@@ -25,7 +25,7 @@ import sys
 from tvguide import makeApp, db, log, errorNotify, errorExit
 from tvguide.config import Configuration
 from tvguide.credential import Credential
-from tvguide.models import Schedule, Schedulemd5, Station, Person, Program
+from tvguide.models import Schedule, Schedulemd5, Station, Person, Program, Logo
 from tvguide.sdapi import SDApi
 
 
@@ -63,13 +63,23 @@ def createChannels():
             xdict = json.load(ifn)
         rmap = getRMap(xdict["map"])
         labels = ["name", "callsign"]
+        llabs = ["height", "width", "category", "md5", "source"]
         for station in xdict["stations"]:
-            kwargs = {key: station[key] for key in labels}
-            kwargs["stationid"] = int(station["stationID"])
-            kwargs["channelnumber"] = rmap[kwargs["stationid"]]
-            stat = Station(**kwargs)
-            log.info(f"{stat=}")
-            db.session.add(stat)
+            stationid = int(station["stationID"])
+            if not Station.query.filter_by(stationid=stationid).first():
+                kwargs = {key: station[key] for key in labels}
+                kwargs["stationid"] = stationid)
+                kwargs["channelnumber"] = rmap[stationid]
+                stat = Station(**kwargs)
+                log.info(f"Inserting {stat=}")
+                db.session.add(stat)
+            for logo in xdict["stationLogo"]:
+                if not Logo.query.filter_by(md5=logo["md5"]).first():
+                    kwargs = {key: logo[key] for key in llabs}
+                    kwargs["url"] = logo["URL"]
+                    ologo = Logo(**kwargs)
+                    log.info(f"Inserting {ologo}")
+                    db.session.add(ologo)
         db.session.commit()
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
