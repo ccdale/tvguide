@@ -99,3 +99,16 @@ class User(db.Model):
 
     def __repr__(self):
         return f"User(uid={self.uid}, name='{self.name}')"
+
+
+class Logo(db.Model):
+    lid = db.Column(db.Integer, primary_key=True)
+    url = db.Column(db.String(256), unique=True, nullable=False)
+    height = db.Column(db.Integer, nullable=True)
+    width = db.Column(db.Integer, nullable=True)
+    md5 = db.Column(db.String(32), nullable=False)
+    source = db.Column(db.String(64), nullable=True)
+    category = db.Column(db.String(10), nullable=True)
+
+    def __repr__(self):
+        return f"Logo(url={self.url})"
