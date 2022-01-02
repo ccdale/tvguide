@@ -73,7 +73,7 @@ def createChannels():
                 stat = Station(**kwargs)
                 log.info(f"Inserting {stat=}")
                 db.session.add(stat)
-            for logo in station:
+            for logo in station["stationLogo"]:
                 if not Logo.query.filter_by(md5=logo["md5"]).first():
                     kwargs = {key: logo[key] for key in llabs}
                     kwargs["url"] = logo["URL"]
