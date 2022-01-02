@@ -63,7 +63,7 @@ def updatePrograms(sd, plist):
         if len(plist) == 0:
             raise Exception("updatePrograms: received empty list")
         progs = sd.getPrograms(plist)
-        [updateProgram(prog) for prog in progs]
+        [addUpdateProgram(prog) for prog in progs]
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 
@@ -99,14 +99,36 @@ def setProgData(eprog, prog):
     except Exception as e:
     errorNotify(sys.exc_info()[2], e)
 
+def addUpdatePersonMap(personid, programid, role, billingorder):
+    try:
+        cm = CastMap.query.filter_by(programid=programid, personid=personid, role=role, billingorder=billingorder).first()
+        if not cm:
+            kwargs = {"programid": programid, "personid": personid, "role": role, "billingorder": billingorder}
+            cm = CastMap(**kwargs)
+            db.session.add(cm)
+            db.session.commit()
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
 
-def updateProgram(prog):
+def addUpdatePerson(person, programid, role, billingorder):
+    try:
+        per = Person.query.filter_by(personid=person["personId"]).first()
+        if not per:
+            kwargs = {"personid": person["personId"], name: person["name"], nameid: person["nameId"]}
+            per = Person(**kwargs)
+            db.session.add(per)
+            db.session.commit()
+        addUpdatePersonMap(per.personid, programid, role, billingorder)
+    except Exception as e:
+    errorNotify(sys.exc_info()[2], e)
+
+
+def addUpdateProgram(prog):
     """Updates/Creates one program information
 
     see
     https://github.com/SchedulesDirect/JSON-Service/wiki/API-20141201#download-program-information
 
-    TODO: update / create cast mapping
     """
     try:
         progid = prog["programID"]
