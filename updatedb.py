@@ -120,6 +120,8 @@ def updateDB():
             log.debug(f"looking for database at: {dbpath}")
             if not dbpath.is_file():
                 raise Exception(f"failed to find a database at: {dpbath}")
+            # if we've changed the models then (re)create the tables
+            db.create_all()
             createChannels()
         # log.debug(f"I'm here so the dbpath must be correct {dbpath}")
         # cfg = Configuration(appname="tvguide")
