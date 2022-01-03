@@ -132,8 +132,10 @@ def addUpdatePersonMap(personid, programid, role, billingorder):
 
 def addUpdatePerson(person, programid):
     try:
+        log.debug(f"addUpdatePerson: {person['name']}")
         per = Person.query.filter_by(personid=person["personId"]).first()
         if not per:
+            log.debug(f"storing person: {person['name']}")
             kwargs = {
                 "personid": person["personId"],
                 name: person["name"],
@@ -158,16 +160,22 @@ def addUpdateProgram(prog):
     """
     try:
         progid = prog["programID"]
+        log.debug(f"addUpdateProg: {progid}")
         eprog = Program.query.filter_by(programid=progid).first()
         if eprog:
+            log.debug(f"{progid} already exists")
             if eprog.md5 == prog["md5"]:
+                log.debug("md5 match")
                 return None
             else:
+                log.debug(f"md5 mismatch: storing {progid}")
                 eprog = setProgData(eprog, prog)
                 db.session.commit()
         else:
+            log.debug(f"new program: {progid}")
             kwargs = {"programid": progid}
             kwargs["title"] = extractString(prog["titles"], "title120")
+            log.debug(f"title: {kwargs['title']}")
             kwargs["episodetitle"] = prog["episodeTitle150"]
             kwargs["shortdesc"] = extractString(prog["descriptions"], "description1000")
             kwargs["originalairdate"] = prog["originalAirDate"]
@@ -209,7 +217,7 @@ def schedulesMd5(sd):
         clist = Station.query.all()
         slist = [x.stationid for x in clist]
         # testing
-        slist = ["87840", "50716"]
+        slist = [87840, 50716]
         smd5 = sd.getScheduleMd5(slist)
         for chan in smd5:
             for xdate in chan:
@@ -217,15 +225,49 @@ def schedulesMd5(sd):
                     if chan not in retrieve:
                         retrieve[chan] = []
                     retrieve[chan].append(date)
-        for chan in retrieve:
-            updateSchedule(sd, chan, retrieve[chan])
+        return retrieve
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 
 
-def updateSchedule(sd, chanid, dlist):
+def addSchedule(sd, sched):
     try:
-        pass
+        plist = []
+        chanid = sched["stationID"]
+        c = Station.query.filter_by(staionid=chanid).first()
+        log.info(
+            f"Updating schedule for channel {c.name} with {len(sched['programs'])} programs"
+        )
+        for prog in sched["programs"]:
+            p = Program.query.filter_by(
+                programid=prog["programID"], md5=prog["md5"]
+            ).first()
+            if not p:
+                plist.append(prog["programID"])
+            kwargs = {"md5": prog["md5"]}
+            kwargs["programid"] = prog["programID"]
+            kwargs["stationid"] = chanid
+            kwargs["airdate"] = prog["airDateTime"]
+            kwargs["duration"] = int(prog["duration"])
+            s = Schedule(**kwargs)
+            db.session.add(s)
+        db.session.commit()
+        log.info(f"require downloading of {len(plist)} programs for {c.name}")
+        updatePrograms(sd, plist)
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
+def schedules(sd):
+    try:
+        log.info("Retrieving schedule hashes")
+        xdat = schedulesMd5(sd)
+        log.info(f"require schedules for {len(xdat)} channels")
+        chans = [{"stationID": str(chanid), "date": xdat[chanid]} for chanid in xdat]
+        scheds = sd.getSchedules(chans)
+        log.info("Updating new schedules")
+        for sched in scheds:
+            addSchedule(sd, sched)
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 
@@ -309,6 +351,7 @@ def updateDB():
             # if we've changed the models then (re)create the tables
             db.create_all()
             updateChannels()
+            schedules()
         # log.debug(f"I'm here so the dbpath must be correct {dbpath}")
         # cfg = Configuration(appname="tvguide")
         # log.debug(cfg.config)
