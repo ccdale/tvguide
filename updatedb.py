@@ -350,18 +350,18 @@ def updateDB():
                 raise Exception(f"failed to find a database at: {dpbath}")
             # if we've changed the models then (re)create the tables
             db.create_all()
-            updateChannels()
-            schedules()
-        # log.debug(f"I'm here so the dbpath must be correct {dbpath}")
-        # cfg = Configuration(appname="tvguide")
-        # log.debug(cfg.config)
-        # sd = makeSD(cfg)
-        # log.debug("Alls good, sd is online")
-        # # code goes here
-        # cfg.update("token", sd.token)
-        # cfg.update("tokenexpires", sd.tokenexpires)
-        # log.debug("writing config")
-        # cfg.writeConfig()
+            log.debug(f"I'm here so the dbpath must be correct {dbpath}")
+            cfg = Configuration(appname="tvguide")
+            log.debug(cfg.config)
+            sd = makeSD(cfg)
+            log.debug("Alls good, sd is online")
+
+            schedules(sd)
+
+            cfg.update("token", sd.token)
+            cfg.update("tokenexpires", sd.tokenexpires)
+            log.debug("writing config")
+            cfg.writeConfig()
     except Exception as e:
         errorExit(sys.exc_info()[2], e)
 
