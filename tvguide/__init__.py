@@ -39,7 +39,7 @@ log.addHandler(jlog)
 log.propagate = False
 log.setLevel(logging.INFO)
 
-__version__ = "0.1.12"
+__version__ = "0.1.13"
 
 db = SQLAlchemy()
 

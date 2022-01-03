@@ -398,6 +398,14 @@ pymysql = ["pymysql (<1)", "pymysql"]
 sqlcipher = ["sqlcipher3-binary"]
 
 [[package]]
+name = "systemd"
+version = "0.16.1"
+description = "Python systemd wrapper"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "urllib3"
 version = "1.26.7"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -458,7 +466,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "c7f9e5f9e8091dc53364ef469b6a0cbae3a8006b5af3d061dcf499a898f0adcb"
+content-hash = "156daf12cd03cbf3a728b49982584f3f17590de1c6e9157d0afa3bdf72957979"
 
 [metadata.files]
 atomicwrites = [
@@ -824,6 +832,9 @@ sqlalchemy = [
     {file = "SQLAlchemy-1.4.29-cp39-cp39-win32.whl", hash = "sha256:37b46bfc4af3dc226acb6fa28ecd2e1fd223433dc5e15a2bad62bf0a0cbb4e8b"},
     {file = "SQLAlchemy-1.4.29-cp39-cp39-win_amd64.whl", hash = "sha256:08cfd35eecaba79be930c9bfd2e1f0c67a7e1314355d83a378f9a512b1cf7587"},
     {file = "SQLAlchemy-1.4.29.tar.gz", hash = "sha256:fa2bad14e1474ba649cfc969c1d2ec915dd3e79677f346bbfe08e93ef9020b39"},
+]
+systemd = [
+    {file = "systemd-0.16.1.tar.gz", hash = "sha256:f44a02434cb1e6ff686bc7d25a7a665cc7af665965e933df3e76fa02d351a75b"},
 ]
 urllib3 = [
     {file = "urllib3-1.26.7-py2.py3-none-any.whl", hash = "sha256:c4fdf4019605b6e5423637e01bc9fe4daef873709a7973e195ceba0a62bbc844"},
