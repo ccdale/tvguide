@@ -68,9 +68,14 @@ class Program(db.Model):
 
 class CastMap(db.Model):
     programid = db.Column(
-        db.String(32), db.ForeignKey("program.programid"), nullable=False
+        db.String(32),
+        db.ForeignKey("program.programid"),
+        nullable=False,
+        primary_key=True,
     )
-    personid = db.Column(db.Integer, db.ForeignKey("person.personid"), nullable=False)
+    personid = db.Column(
+        db.Integer, db.ForeignKey("person.personid"), nullable=False, primary_key=True
+    )
     role = db.Column(db.String(64), nullable=False)
     billingorder = db.Column(db.String(10), nullable=True)
 
