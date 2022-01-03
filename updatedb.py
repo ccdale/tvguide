@@ -181,6 +181,55 @@ def addUpdateProgram(prog):
         errorNotify(sys.exc_info()[2], e)
 
 
+def addUpdateSMD5(sd, smd5, chanid, xdate):
+    try:
+        md5 = Schedulemd5.query.filter_by(md5=smd5["md5"], stationid=chanid).first()
+        if md5:
+            return False
+        sdate = f"{xdate}T00:00:00Z"
+        datets = sd.getTimeStamp(sdate)
+        kwargs = {
+            "md5": smd5["md5"],
+            "stationid": chanid,
+            "datestr": xdate,
+            "datets": datets,
+            "modified": smd5["lastModified"],
+        }
+        md5 = Schedulemd5(**kwargs)
+        db.session.add(md5)
+        db.session.commit()
+        return True
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
+def schedulesMd5(sd):
+    try:
+        retrieve = {}
+        clist = Station.query.all()
+        slist = [x.stationid for x in clist]
+        # testing
+        slist = ["87840", "50716"]
+        smd5 = sd.getScheduleMd5(slist)
+        for chan in smd5:
+            for xdate in chan:
+                if addUpdateSMD5(sd, smd5[chan][xdate], chan, xdate):
+                    if chan not in retrieve:
+                        retrieve[chan] = []
+                    retrieve[chan].append(date)
+        for chan in retrieve:
+            updateSchedule(sd, chan, retrieve[chan])
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
+def updateSchedule(sd, chanid, dlist):
+    try:
+        pass
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
 def updateChannels():
     try:
         with open("/home/chris/tmp/lineups.json", "r") as ifn:

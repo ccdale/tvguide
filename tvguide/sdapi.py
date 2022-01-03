@@ -365,9 +365,10 @@ class SDApi:
     def getScheduleMd5(self, chanids):
         """Retrieve the md5 hashes for the supplied channel schedules."""
         try:
-            chans = []
-            for chanid in chanids:
-                chans.append({"stationID": str(chanid)})
+            # chans = []
+            # for chanid in chanids:
+            #     chans.append({"stationID": str(chanid)})
+            chans = [{"stationID": str(chanid)} for chanid in chans]
 
             @self.apiTokenRequired
             def sdgetschedulemd5():
