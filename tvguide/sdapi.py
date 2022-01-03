@@ -368,7 +368,7 @@ class SDApi:
             # chans = []
             # for chanid in chanids:
             #     chans.append({"stationID": str(chanid)})
-            chans = [{"stationID": str(chanid)} for chanid in chans]
+            chans = [{"stationID": str(chanid)} for chanid in chanids]
 
             @self.apiTokenRequired
             def sdgetschedulemd5():
