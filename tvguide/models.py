@@ -51,6 +51,13 @@ class Person(db.Model):
         return f"Person(name='{self.name}')"
 
 
+class Genre(db.Model):
+    name = db.Column(db.String(64), primary_key=True)
+
+    def __repr__(self):
+        return f"Genre(name='{self.name}')"
+
+
 class Program(db.Model):
     programid = db.Column(db.String(32), primary_key=True)
     md5 = db.Column(db.String(32), unique=True)
