@@ -261,7 +261,7 @@ def schedulesMd5(sd):
         slist = [x.stationid for x in clist]
 
         # testing
-        # slist = [87840, 50716]
+        slist = [87840, 50716]
         # testing
 
         smd5 = sd.getScheduleMd5(slist)
