@@ -112,9 +112,7 @@ def setProgData(eprog, prog):
 
 def addUpdatePersonMap(personid, programid, role, billingorder):
     try:
-        cm = CastMap.query.filter_by(
-            programid=programid, personid=personid, role=role, billingorder=billingorder
-        ).first()
+        cm = CastMap.query.filter_by(programid=programid, personid=personid).first()
         if not cm:
             kwargs = {
                 "programid": programid,
@@ -145,7 +143,8 @@ def addUpdatePerson(person, programid):
             db.session.add(per)
             db.session.commit()
         billingorder = "0" if "billingorder" not in person else person["billingorder"]
-        addUpdatePersonMap(per.personid, programid, person["role"], billingorder)
+        role = "" if "role" not in person else person["role"]
+        addUpdatePersonMap(per.personid, programid, role, billingorder)
     except Exception as e:
         msg = f"{person=}, {programid=}"
         errorExit(sys.exc_info()[2], e, msg)
@@ -435,7 +434,7 @@ def updateDB():
             log.debug("Alls good, sd is online")
             linupRefresh(sd, cfg)
 
-            forceMd5Update()
+            # forceMd5Update()
 
             schedules(sd)
 
