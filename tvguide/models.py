@@ -81,7 +81,7 @@ class GenreMap(db.Model):
         primary_key=True,
     )
     genre = db.Column(
-        db.String(64), db.ForeignKey("Genre.name"), nullable=False, primary_key=True
+        db.String(64), db.ForeignKey("genre.name"), nullable=False, primary_key=True
     )
 
     def __repr__(self):
