@@ -260,7 +260,8 @@ def schedulesMd5(sd):
         slist = [x.stationid for x in clist]
 
         # testing
-        slist = [87840, 50716]
+        # slist = [87840, 50716] # bbc1 and c4
+        slist = [17154, 16234]  # sky news and bbc2
         # testing
 
         smd5 = sd.getScheduleMd5(slist)
@@ -434,7 +435,7 @@ def updateDB():
             log.debug("Alls good, sd is online")
             linupRefresh(sd, cfg)
 
-            # forceMd5Update()
+            forceMd5Update()
 
             schedules(sd)
 
