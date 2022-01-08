@@ -44,29 +44,32 @@ __version__ = "0.2.16"
 db = SQLAlchemy()
 
 
-def errorRaise(exci, e):
+def errorRaise(exci, e, omsg=""):
     lineno = exci.tb_lineno
     fname = exci.tb_frame.f_code.co_name
     ename = type(e).__name__
-    msg = f"{ename} Exception at line {lineno} in function {fname}: {e}"
+    xmsg = "" if len(omsg) == 0 else f" - {omsg}"
+    msg = f"{ename} Exception at line {lineno} in function {fname}: {e}{xmsg}"
     log.error(msg)
     raise
 
 
-def errorNotify(exci, e):
+def errorNotify(exci, e, omsg=""):
     lineno = exci.tb_lineno
     fname = exci.tb_frame.f_code.co_name
     ename = type(e).__name__
-    msg = f"{ename} Exception at line {lineno} in function {fname}: {e}"
+    xmsg = "" if len(omsg) == 0 else f" - {omsg}"
+    msg = f"{ename} Exception at line {lineno} in function {fname}: {e}{xmsg}"
     log.error(msg)
     return msg
 
 
-def errorExit(exci, e):
+def errorExit(exci, e, omsg=""):
     lineno = exci.tb_lineno
     fname = exci.tb_frame.f_code.co_name
     ename = type(e).__name__
-    msg = f"{ename} Exception at line {lineno} in function {fname}: {e}"
+    xmsg = "" if len(omsg) == 0 else f" - {omsg}"
+    msg = f"{ename} Exception at line {lineno} in function {fname}: {e}{xmsg}"
     log.error(msg)
     sys.exit(1)
 

@@ -143,9 +143,8 @@ def addUpdatePerson(person, programid):
             per = Person(**kwargs)
             db.session.add(per)
             db.session.commit()
-        addUpdatePersonMap(
-            per.personid, programid, person["role"], person["billingorder"]
-        )
+        billingorder = "0" if "billingorder" not in person else person["billingorder"]
+        addUpdatePersonMap(per.personid, programid, person["role"], billingorder)
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 
