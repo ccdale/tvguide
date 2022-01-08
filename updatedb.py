@@ -311,10 +311,6 @@ def addSchedule(sd, sched):
                 f"require downloading of {cn} programs for {c.name} on {startdate}"
             )
             updatePrograms(sd, plist)
-        else:
-            log.info(
-                f"no program data needed to be downloaded for {c.name} on {startdate}"
-            )
     except Exception as e:
         errorExit(sys.exc_info()[2], e)
 
