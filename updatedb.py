@@ -64,6 +64,7 @@ def updatePrograms(sd, plist):
 
 def extractString(xlist, key):
     try:
+        log.debug(f"extractString: {xlist=}, {key=}")
         for item in xlist:
             if key in item:
                 return item[key]
@@ -88,10 +89,20 @@ def setProgData(eprog, prog):
     try:
         eprog.md5 = prog["md5"]
         eprog.title = extractString(prog["titles"], "title120")
-        eprog.episodetitle = prog["episodeTitle150"]
-        eprog.shortdesc = extractString(prog["descriptions"], "description1000")
+        eprog.episodetitle = (
+            "" if "episodeTitle150" not in prog else prog["episodeTitle150"]
+        )
+        if "descriptions" in prog and "description1000" in prog["descriptions"]:
+            eprog.longdesc = extractString(
+                prog["descriptions"]["description1000"], "description"
+            )
+        if "descriptions" in prog and "description100" in prog["descriptions"]:
+            eprog.shortdesc = extractString(
+                prog["descriptions"]["description100"], "description"
+            )
         eprog.originalairdate = prog["originalAirDate"]
-        eprog.series, prog.episode = extractSeries(prog["metadata"])
+        if "metadata" in prog:
+            eprog.series, prog.episode = extractSeries(prog["metadata"])
         return eprog
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
@@ -159,20 +170,35 @@ def addUpdateProgram(prog):
                 db.session.commit()
         else:
             log.debug(f"new program: {progid}")
-            kwargs = {"programid": progid}
+            kwargs = {"programid": progid, "md5": prog["md5"]}
             kwargs["title"] = extractString(prog["titles"], "title120")
             log.debug(f"title: {kwargs['title']}")
-            kwargs["episodetitle"] = prog["episodeTitle150"]
-            kwargs["shortdesc"] = extractString(prog["descriptions"], "description1000")
-            kwargs["originalairdate"] = prog["originalAirDate"]
-            kwargs["series"], kwargs["episode"] = extractSeries(prog["metadata"])
+            kwargs["episodetitle"] = (
+                "" if "episodeTitle150" not in prog else prog["episodeTitle150"]
+            )
+            if "descriptions" in prog and "description100" in prog["descriptions"]:
+                kwargs["shortdesc"] = extractString(
+                    prog["descriptions"]["description100"], "description"
+                )
+            if "descriptions" in prog and "description1000" in prog["descriptions"]:
+                kwargs["longdesc"] = extractString(
+                    prog["descriptions"]["description1000"], "description"
+                )
+            if "originalAirDate" in prog:
+                kwargs["originalairdate"] = prog["originalAirDate"]
+            else:
+                log.debug(f"originalAirDate not in {prog=}")
+            if "metadata" in prog:
+                kwargs["series"], kwargs["episode"] = extractSeries(prog["metadata"])
             eprog = Program(**kwargs)
             db.session.add(eprog)
             db.session.commit()
-        [addUpdatePerson(item, programid) for item in prog["cast"]]
-        [addUpdatePerson(item, programid) for item in prog["crew"]]
+        if "cast" in prog:
+            [addUpdatePerson(item, progid) for item in prog["cast"]]
+        if "crew" in prog:
+            [addUpdatePerson(item, progid) for item in prog["crew"]]
     except Exception as e:
-        errorNotify(sys.exc_info()[2], e)
+        errorExit(sys.exc_info()[2], e)
 
 
 def addUpdateSMD5(sd, smd5, chanid, xdate):
