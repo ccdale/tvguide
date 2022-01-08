@@ -387,9 +387,10 @@ class SDApi:
     def getFullSchedules(self, chanids):
         """Retrieves the full schedules that are available for each channel id."""
         try:
-            chans = []
-            for chanid in chanids:
-                chans.append({"stationID": str(chanid)})
+            # chans = []
+            # for chanid in chanids:
+            #     chans.append({"stationID": str(chanid)})
+            chans = [{"stationID": str(chanid)} for chanid in chanids]
 
             @self.apiTokenRequired
             def sdgetfullschedules():
