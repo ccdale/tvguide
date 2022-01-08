@@ -282,9 +282,12 @@ def addSchedule(sd, sched):
     try:
         plist = []
         chanid = sched["stationID"]
+        startdate = "unknown date"
+        if "metadata" in sched and "startDate" in sched["metadata"]:
+            startdate = sched["metadata"]["startDate"]
         c = Station.query.filter_by(stationid=chanid).first()
         log.info(
-            f"Updating schedule for channel {c.name} with {len(sched['programs'])} programs"
+            f"Updating schedule for channel {c.name} with {len(sched['programs'])} programs on {startdate}"
         )
         for prog in sched["programs"]:
             kwargs = {"md5": prog["md5"]}
@@ -303,9 +306,6 @@ def addSchedule(sd, sched):
             if not p:
                 plist.append(prog["programID"])
         cn = len(plist)
-        startdate = "unknown"
-        if "metadata" in sched and "startDate" in sched["metadata"]:
-            startdate = sched["metadata"]["startDate"]
         if cn > 0:
             log.info(
                 f"require downloading of {cn} programs for {c.name} on {startdate}"
