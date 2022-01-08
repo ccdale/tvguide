@@ -34,6 +34,8 @@ from tvguide.models import (
     Program,
     Logo,
     CastMap,
+    Genre,
+    GenreMap,
 )
 from tvguide.sdapi import SDApi
 
@@ -144,6 +146,33 @@ def addUpdatePerson(person, programid):
         addUpdatePersonMap(
             per.personid, programid, person["role"], person["billingorder"]
         )
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
+def addUpdateGenreMap(genre, progid):
+    try:
+        gm = GenreMap.query.filter_by(name=genre, programid=progid).first()
+        if not gm:
+            kwargs = {"programid": progid, "genre": genre}
+            gm = GenreMap(**kwargs)
+            db.session.add(gm)
+            db.session.commit()
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
+def addUpdateGenre(genre, progid):
+    try:
+        log.debug(f"addUpdateGenre: {genre}")
+        g = Genre.query.filter_by(name=genre).first()
+        if not g:
+            log.debug(f"storing {genre=}")
+            kwargs = {"name": genre}
+            g = Genre(**kwargs)
+            db.session.add(g)
+            db.session.commit()
+        addUpdateGenreMap(genre, progid)
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 

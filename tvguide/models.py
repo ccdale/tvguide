@@ -80,12 +80,12 @@ class GenreMap(db.Model):
         nullable=False,
         primary_key=True,
     )
-    gname = db.Column(
+    genre = db.Column(
         db.String(64), db.ForeignKey("Genre.name"), nullable=False, primary_key=True
     )
 
     def __repr__(self):
-        return f"GenreMap(programid={self.programid}, gname={self.gname}"
+        return f"GenreMap(programid={self.programid}, genre={self.genre}"
 
 
 class CastMap(db.Model):
