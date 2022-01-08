@@ -84,14 +84,14 @@ class CastMap(db.Model):
 
 
 class Schedule(db.Model):
-    md5 = db.Column(db.String(32), primary_key=True)
+    md5 = db.Column(db.String(32), nullable=False)
     programid = db.Column(
-        db.String(32), db.ForeignKey("program.programid"), nullable=False
+        db.String(32), db.ForeignKey("program.programid"), primary_key=True
     )
     stationid = db.Column(
-        db.Integer, db.ForeignKey("station.stationid"), nullable=False
+        db.Integer, db.ForeignKey("station.stationid"), primary_key=True
     )
-    airdate = db.Column(db.Integer, nullable=False)
+    airdate = db.Column(db.Integer, primary_key=True)
     duration = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):

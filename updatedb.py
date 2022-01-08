@@ -242,6 +242,7 @@ def addSchedule(sd, sched):
             kwargs["stationid"] = chanid
             kwargs["airdate"] = sd.getTimeStamp(prog["airDateTime"])
             kwargs["duration"] = int(prog["duration"])
+            log.debug(f"addSchedule: {kwargs=}")
             s = Schedule(**kwargs)
             db.session.add(s)
         db.session.commit()
@@ -254,7 +255,7 @@ def addSchedule(sd, sched):
         log.info(f"require downloading of {len(plist)} programs for {c.name}")
         updatePrograms(sd, plist)
     except Exception as e:
-        errorNotify(sys.exc_info()[2], e)
+        errorExit(sys.exc_info()[2], e)
 
 
 def schedules(sd):
@@ -333,8 +334,12 @@ def forceMd5Update():
     try:
         n = Schedulemd5.query.delete()
         log.info(f"deleted {n} rows from ScheduleMd5")
+        db.session.commit()
+        n = Schedule.query.delete()
+        log.info(f"deleted {n} rows from Schedule")
+        db.session.commit()
     except Exception as e:
-        errorNotify(sys.exc_info()[2], e)
+        errorExit(sys.exc_info()[2], e)
 
 
 def makeSD(cfg):
