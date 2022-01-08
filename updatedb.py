@@ -232,11 +232,11 @@ def addSchedule(sd, sched):
             f"Updating schedule for channel {c.name} with {len(sched['programs'])} programs"
         )
         for prog in sched["programs"]:
-            p = Program.query.filter_by(
-                programid=prog["programID"], md5=prog["md5"]
-            ).first()
-            if not p:
-                plist.append(prog["programID"])
+            # p = Program.query.filter_by(
+            #     programid=prog["programID"], md5=prog["md5"]
+            # ).first()
+            # if not p:
+            #     plist.append(prog["programID"])
             kwargs = {"md5": prog["md5"]}
             kwargs["programid"] = prog["programID"]
             kwargs["stationid"] = chanid
@@ -245,6 +245,12 @@ def addSchedule(sd, sched):
             s = Schedule(**kwargs)
             db.session.add(s)
         db.session.commit()
+        for prog in sched["programs"]:
+            p = Program.query.filter_by(
+                programid=prog["programID"], md5=prog["md5"]
+            ).first()
+            if not p:
+                plist.append(prog["programID"])
         log.info(f"require downloading of {len(plist)} programs for {c.name}")
         updatePrograms(sd, plist)
     except Exception as e:
@@ -323,6 +329,14 @@ def linupRefresh(sd, cfg):
         errorNotify(sys.exc_info()[2], e)
 
 
+def forceMd5Update():
+    try:
+        n = Schedulemd5.query.delete()
+        log.info(f"deleted {n} rows from ScheduleMd5")
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
 def makeSD(cfg):
     try:
         keys = ["username", "token", "tokenexpires", "appname"]
@@ -356,8 +370,9 @@ def updateDB():
             log.debug(cfg.config)
             sd = makeSD(cfg)
             log.debug("Alls good, sd is online")
-
             linupRefresh(sd, cfg)
+
+            forceMd5Update()
 
             schedules(sd)
 
