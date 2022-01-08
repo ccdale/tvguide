@@ -313,9 +313,8 @@ def updateChannels(linupdata):
 
 def linupRefresh(sd, cfg):
     try:
-        lastupdate = cfg.get("linupupdate", 0)
         for lineup in sd.lineups:
-            if sd.getTimeStamp(lineup["modified"]) > lastupdate:
+            if sd.getTimeStamp(lineup["modified"]) > cfg.get("lineupdate", 0):
                 log.info(f"Lineup changes detected: refreshing lineup {lineup}")
                 lineupdata = sd.getLineup(lineup["lineup"])
                 updateChannels(lineupdata)
