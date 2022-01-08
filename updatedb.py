@@ -22,6 +22,7 @@ from pathlib import Path
 from pprint import pprint
 import sys
 
+
 from tvguide import makeApp, db, log, errorNotify, errorExit
 from tvguide.config import Configuration
 from tvguide.credential import Credential
@@ -176,7 +177,7 @@ def addUpdateProgram(prog):
 
 def addUpdateSMD5(sd, smd5, chanid, xdate):
     try:
-        md5 = Schedulemd5.query.filter_by(md5=smd5["md5"], stationid=chanid).first()
+        md5 = Schedulemd5.query.filter_by(md5=smd5["md5"]).first()
         if md5:
             return False
         sdate = f"{xdate}T00:00:00Z"
@@ -192,7 +193,9 @@ def addUpdateSMD5(sd, smd5, chanid, xdate):
         db.session.commit()
         return True
     except Exception as e:
-        errorExit(sys.exc_info()[2], e)
+        msg = f"{e}\n{smd5=}, {chanid=}, {xdate=}\n"
+        msg += f"{kwargs=}"
+        errorExit(sys.exc_info()[2], msg)
 
 
 def schedulesMd5(sd):
@@ -200,8 +203,11 @@ def schedulesMd5(sd):
         retrieve = {}
         clist = Station.query.all()
         slist = [x.stationid for x in clist]
+
         # testing
         slist = [87840, 50716]
+        # testing
+
         smd5 = sd.getScheduleMd5(slist)
         for chan in smd5:
             log.debug(f"{chan=}")
@@ -220,7 +226,7 @@ def addSchedule(sd, sched):
     try:
         plist = []
         chanid = sched["stationID"]
-        c = Station.query.filter_by(staionid=chanid).first()
+        c = Station.query.filter_by(stationid=chanid).first()
         log.info(
             f"Updating schedule for channel {c.name} with {len(sched['programs'])} programs"
         )
@@ -262,7 +268,8 @@ def updateChannels(linupdata):
     try:
         # with open("/home/chris/tmp/lineups.json", "r") as ifn:
         #     xdict = json.load(ifn)
-        xdict = json.loads(linupdata)
+        # xdict = json.loads(linupdata)
+        xdict = linupdata
         rmap = getRMap(xdict["map"])
         labels = ["name", "callsign"]
         llabs = ["height", "width", "category", "md5", "source"]
