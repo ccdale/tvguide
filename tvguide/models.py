@@ -73,6 +73,21 @@ class Program(db.Model):
         return f"Program(title='{self.title}', series={self.series}, episode={self.episode}, episodetitle='{self.episodetitle}')"
 
 
+class GenreMap(db.Model):
+    programid = db.Column(
+        db.String(32),
+        db.ForeignKey("program.programid"),
+        nullable=False,
+        primary_key=True,
+    )
+    gname = db.Column(
+        db.String(64), db.ForeignKey("Genre.name"), nullable=False, primary_key=True
+    )
+
+    def __repr__(self):
+        return f"GenreMap(programid={self.programid}, gname={self.gname}"
+
+
 class CastMap(db.Model):
     programid = db.Column(
         db.String(32),
