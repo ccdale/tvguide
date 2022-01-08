@@ -451,7 +451,8 @@ def updateDB():
 
 
 if __name__ == "__main__":
-    os.environ["FLASK_ENV"] = "development"
+    # flask has already set warning level
+    log.setLevel(logging.INFO)
     if len(sys.argv) > 1:
         if sys.argv[1] == "v":
             log.setLevel(logging.DEBUG)
