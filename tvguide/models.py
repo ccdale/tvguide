@@ -91,7 +91,7 @@ class Schedule(db.Model):
     stationid = db.Column(
         db.Integer, db.ForeignKey("station.stationid"), nullable=False
     )
-    airdate = db.Column(db.DateTime, nullable=False)
+    airdate = db.Column(db.Integer, nullable=False)
     duration = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
@@ -101,9 +101,8 @@ class Schedule(db.Model):
 class Schedulemd5(db.Model):
     md5 = db.Column(db.String(32), primary_key=True)
     stationid = db.ForeignKey("station.stationid", nullable=False)
-    datestr = db.Column(db.DateTime, nullable=False)
     datets = db.Column(db.Integer, nullable=False)
-    modified = db.Column(db.DateTime, nullable=False)
+    modified = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
         return f"Schedulemd5(stationid={self.stationid}, md5='{self.md5}', modified={self.modified})"

@@ -199,9 +199,8 @@ def addUpdateSMD5(sd, smd5, chanid, xdate):
         kwargs = {
             "md5": smd5["md5"],
             "stationid": chanid,
-            "datestr": xdate,
             "datets": datets,
-            "modified": smd5["lastModified"],
+            "modified": sd.getTimeStamp(smd5["lastModified"]),
         }
         md5 = Schedulemd5(**kwargs)
         db.session.add(md5)
@@ -220,7 +219,9 @@ def schedulesMd5(sd):
         slist = [87840, 50716]
         smd5 = sd.getScheduleMd5(slist)
         for chan in smd5:
-            for xdate in chan:
+            log.debug(f"{chan=}")
+            for xdate in smd5[chan]:
+                log.debug(f"{xdate=}")
                 if addUpdateSMD5(sd, smd5[chan][xdate], chan, xdate):
                     if chan not in retrieve:
                         retrieve[chan] = []
@@ -247,7 +248,7 @@ def addSchedule(sd, sched):
             kwargs = {"md5": prog["md5"]}
             kwargs["programid"] = prog["programID"]
             kwargs["stationid"] = chanid
-            kwargs["airdate"] = prog["airDateTime"]
+            kwargs["airdate"] = sd.getTimeStamp(prog["airDateTime"])
             kwargs["duration"] = int(prog["duration"])
             s = Schedule(**kwargs)
             db.session.add(s)
