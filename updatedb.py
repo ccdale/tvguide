@@ -311,12 +311,15 @@ def updateChannels(linupdata):
         errorNotify(sys.exc_info()[2], e)
 
 
-def linupRefresh(sd):
+def linupRefresh(sd, cfg):
     try:
+        lastupdate = cfg.get("linupupdate", 0)
         for lineup in sd.lineups:
-            print(lineup)
-            lineupdata = sd.getLineup(lineup["lineup"])
-            updateChannels(lineupdata)
+            if sd.getTimeStamp(lineup["modified"]) > lastupdate:
+                log.info(f"Lineup changes detected: refreshing lineup {lineup}")
+                lineupdata = sd.getLineup(lineup["lineup"])
+                updateChannels(lineupdata)
+                cfg.update("lineupdate", sd.getTimeStamp(lineup["modified"]))
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 
@@ -355,7 +358,7 @@ def updateDB():
             sd = makeSD(cfg)
             log.debug("Alls good, sd is online")
 
-            linupRefresh(sd)
+            linupRefresh(sd, cfg)
 
             schedules(sd)
 
