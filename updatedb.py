@@ -287,11 +287,6 @@ def addSchedule(sd, sched):
             f"Updating schedule for channel {c.name} with {len(sched['programs'])} programs"
         )
         for prog in sched["programs"]:
-            # p = Program.query.filter_by(
-            #     programid=prog["programID"], md5=prog["md5"]
-            # ).first()
-            # if not p:
-            #     plist.append(prog["programID"])
             kwargs = {"md5": prog["md5"]}
             kwargs["programid"] = prog["programID"]
             kwargs["stationid"] = chanid
@@ -457,5 +452,7 @@ def updateDB():
 
 if __name__ == "__main__":
     os.environ["FLASK_ENV"] = "development"
-    log.setLevel(logging.DEBUG)
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "v":
+            log.setLevel(logging.DEBUG)
     updateDB()
