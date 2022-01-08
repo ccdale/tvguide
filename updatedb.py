@@ -137,8 +137,8 @@ def addUpdatePerson(person, programid):
             log.debug(f"storing person: {person['name']}")
             kwargs = {
                 "personid": person["personId"],
-                name: person["name"],
-                nameid: person["nameId"],
+                "name": person["name"],
+                "nameid": person["nameId"],
             }
             per = Person(**kwargs)
             db.session.add(per)
@@ -307,8 +307,12 @@ def addSchedule(sd, sched):
             ).first()
             if not p:
                 plist.append(prog["programID"])
-        log.info(f"require downloading of {len(plist)} programs for {c.name}")
-        updatePrograms(sd, plist)
+        cn = len(plist)
+        if cn > 0:
+            log.info(f"require downloading of {cn} programs for {c.name}")
+            updatePrograms(sd, plist)
+        else:
+            log.info(f"no program data needed to be downloaded for {c.name}")
     except Exception as e:
         errorExit(sys.exc_info()[2], e)
 
