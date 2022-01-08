@@ -40,21 +40,6 @@ from tvguide.sdapi import SDApi
 app = makeApp()
 
 
-def writeChanMap():
-    try:
-        with open("/home/chris/tmp/lineups.json", "r") as ifn:
-            xdict = json.load(ifn)
-        xmap = xdict["map"]
-        rmap = {}
-        for xm in xmap:
-            rmap[xm["stationID"]] = xm["channel"]
-        pprint(rmap)
-        with open("/home/chris/tmp/rmap.json", "w") as ofn:
-            json.dump(rmap, ofn)
-    except Exception as e:
-        errorNotify(sys.exc_info()[2], e)
-
-
 def getRMap(xmap):
     try:
         rmap = {}
@@ -207,7 +192,7 @@ def addUpdateSMD5(sd, smd5, chanid, xdate):
         db.session.commit()
         return True
     except Exception as e:
-        errorNotify(sys.exc_info()[2], e)
+        errorExit(sys.exc_info()[2], e)
 
 
 def schedulesMd5(sd):
@@ -225,7 +210,7 @@ def schedulesMd5(sd):
                 if addUpdateSMD5(sd, smd5[chan][xdate], chan, xdate):
                     if chan not in retrieve:
                         retrieve[chan] = []
-                    retrieve[chan].append(date)
+                    retrieve[chan].append(xdate)
         return retrieve
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
@@ -273,10 +258,11 @@ def schedules(sd):
         errorNotify(sys.exc_info()[2], e)
 
 
-def updateChannels():
+def updateChannels(linupdata):
     try:
-        with open("/home/chris/tmp/lineups.json", "r") as ifn:
-            xdict = json.load(ifn)
+        # with open("/home/chris/tmp/lineups.json", "r") as ifn:
+        #     xdict = json.load(ifn)
+        xdict = json.loads(linupdata)
         rmap = getRMap(xdict["map"])
         labels = ["name", "callsign"]
         llabs = ["height", "width", "category", "md5", "source"]
@@ -318,7 +304,8 @@ def linupRefresh(sd):
     try:
         for lineup in sd.lineups:
             print(lineup)
-            sd.getLineup(lineup["lineup"])
+            lineupdata = sd.getLineup(lineup["lineup"])
+            updateChannels(lineupdata)
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 
@@ -347,15 +334,17 @@ def updateDB():
         with app.app_context():
             dbpath = Path(app.config["DATABASE"])
             log.debug(f"looking for database at: {dbpath}")
-            if not dbpath.is_file():
-                raise Exception(f"failed to find a database at: {dpbath}")
             # if we've changed the models then (re)create the tables
             db.create_all()
+            if not dbpath.is_file():
+                raise Exception(f"failed to find a database at: {dbpath}")
             log.debug(f"I'm here so the dbpath must be correct {dbpath}")
             cfg = Configuration(appname="tvguide")
             log.debug(cfg.config)
             sd = makeSD(cfg)
             log.debug("Alls good, sd is online")
+
+            linupRefresh(sd)
 
             schedules(sd)
 
@@ -370,6 +359,4 @@ def updateDB():
 if __name__ == "__main__":
     os.environ["FLASK_ENV"] = "development"
     log.setLevel(logging.DEBUG)
-    # createChannels()
-    # writeChanMap()
     updateDB()
