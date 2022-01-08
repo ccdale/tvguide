@@ -435,7 +435,7 @@ def updateDB():
             log.debug("Alls good, sd is online")
             linupRefresh(sd, cfg)
 
-            # forceMd5Update()
+            forceMd5Update()
 
             schedules(sd)
 

@@ -44,7 +44,7 @@ class Station(db.Model):
 
 class Person(db.Model):
     personid = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), index=True, unique=True)
+    name = db.Column(db.String(64), index=True)
     nameid = db.Column(db.Integer, nullable=True)
 
     def __repr__(self):
