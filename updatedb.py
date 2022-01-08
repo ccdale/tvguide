@@ -308,11 +308,18 @@ def addSchedule(sd, sched):
             if not p:
                 plist.append(prog["programID"])
         cn = len(plist)
+        startdate = "unknown"
+        if "metadata" in sched and "startDate" in sched["metadata"]:
+            startdate = sched["metadata"]["startDate"]
         if cn > 0:
-            log.info(f"require downloading of {cn} programs for {c.name}")
+            log.info(
+                f"require downloading of {cn} programs for {c.name} on {startdate}"
+            )
             updatePrograms(sd, plist)
         else:
-            log.info(f"no program data needed to be downloaded for {c.name}")
+            log.info(
+                f"no program data needed to be downloaded for {c.name} on {startdate}"
+            )
     except Exception as e:
         errorExit(sys.exc_info()[2], e)
 
