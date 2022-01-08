@@ -210,13 +210,14 @@ def schedulesMd5(sd):
 
         smd5 = sd.getScheduleMd5(slist)
         for chan in smd5:
-            log.debug(f"{chan=}")
+            log.debug(f"scheduleMd5: {chan=}")
             for xdate in smd5[chan]:
-                log.debug(f"{xdate=}")
+                log.debug(f"scheduleMd5: {xdate=}")
                 if addUpdateSMD5(sd, smd5[chan][xdate], chan, xdate):
                     if chan not in retrieve:
                         retrieve[chan] = []
                     retrieve[chan].append(xdate)
+        log.debug(f"sheduleMd5 returns: {retrieve=}")
         return retrieve
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
@@ -255,11 +256,14 @@ def schedules(sd):
         log.info("Retrieving schedule hashes")
         xdat = schedulesMd5(sd)
         log.info(f"require schedules for {len(xdat)} channels")
-        chans = [{"stationID": str(chanid), "date": xdat[chanid]} for chanid in xdat]
-        scheds = sd.getSchedules(chans)
-        log.info("Updating new schedules")
-        for sched in scheds:
-            addSchedule(sd, sched)
+        if len(xdat) > 0:
+            chans = [
+                {"stationID": str(chanid), "date": xdat[chanid]} for chanid in xdat
+            ]
+            scheds = sd.getSchedules(chans)
+            log.info("Updating new schedules")
+            for sched in scheds:
+                addSchedule(sd, sched)
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 
