@@ -261,7 +261,7 @@ def schedulesMd5(sd):
 
         # testing
         # slist = [87840, 50716] # bbc1 and c4
-        slist = [17154, 16234]  # sky news and bbc2
+        # slist = [17154, 16234]  # sky news and bbc2
         # testing
 
         smd5 = sd.getScheduleMd5(slist)
