@@ -126,7 +126,8 @@ def addUpdatePersonMap(personid, programid, role, billingorder):
             db.session.add(cm)
             db.session.commit()
     except Exception as e:
-        errorNotify(sys.exc_info()[2], e)
+        msg = f"{personid=}, {programid=}, {role=}, {billingorder=}"
+        errorNotify(sys.exc_info()[2], e, msg)
 
 
 def addUpdatePerson(person, programid):
@@ -146,7 +147,8 @@ def addUpdatePerson(person, programid):
         billingorder = "0" if "billingorder" not in person else person["billingorder"]
         addUpdatePersonMap(per.personid, programid, person["role"], billingorder)
     except Exception as e:
-        errorNotify(sys.exc_info()[2], e)
+        msg = f"{person=}, {programid=}"
+        errorExit(sys.exc_info()[2], e, msg)
 
 
 def addUpdateGenreMap(genre, progid):
