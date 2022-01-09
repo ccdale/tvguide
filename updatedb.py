@@ -408,7 +408,7 @@ def makeSD(cfg):
             kwargs[key] = cfg.get(key)
         cred = Credential(kwargs["username"], cfg.get("host"))
         kwargs["password"] = cred.getPassword()
-        kwargs["debug"] = True
+        # kwargs["debug"] = True
         sd = SDApi(**kwargs)
         sd.apiOnline()
         if not sd.online:
