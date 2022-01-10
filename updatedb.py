@@ -291,14 +291,20 @@ def addSchedule(sd, sched):
             f"Updating schedule for channel {c.name} with {len(sched['programs'])} programs on {startdate}"
         )
         for prog in sched["programs"]:
-            kwargs = {"md5": prog["md5"]}
             kwargs["programid"] = prog["programID"]
             kwargs["stationid"] = chanid
             kwargs["airdate"] = sd.getTimeStamp(prog["airDateTime"])
-            kwargs["duration"] = int(prog["duration"])
-            log.debug(f"addSchedule: {kwargs=}")
-            s = Schedule(**kwargs)
-            db.session.add(s)
+            s = Schedule.query.filter_by(**kwargs).first()
+            if s:
+                s.md5 = prog["md5"]
+                s.duration = int(prog["duration"])
+                log.debug(f"update schedule: {kwargs=}")
+            else:
+                kwargs = {"md5": prog["md5"]}
+                kwargs["duration"] = int(prog["duration"])
+                log.debug(f"addSchedule: {kwargs=}")
+                s = Schedule(**kwargs)
+                db.session.add(s)
         db.session.commit()
         for prog in sched["programs"]:
             p = Program.query.filter_by(
