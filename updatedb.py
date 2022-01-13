@@ -291,9 +291,11 @@ def addSchedule(sd, sched):
             f"Updating schedule for channel {c.name} with {len(sched['programs'])} programs on {startdate}"
         )
         for prog in sched["programs"]:
-            kwargs["programid"] = prog["programID"]
-            kwargs["stationid"] = chanid
-            kwargs["airdate"] = sd.getTimeStamp(prog["airDateTime"])
+            kwargs = {
+                "programid": prog["programID"],
+                "stationid": chanid,
+                "airdate": sd.getTimeStamp(prog["airDateTime"]),
+            }
             s = Schedule.query.filter_by(**kwargs).first()
             if s:
                 s.md5 = prog["md5"]

@@ -33,6 +33,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from tvguide import db, log, errorNotify
 from tvguide.models import Station
+from tvguide.data import channelSchedule, timeLine
 
 bp = Blueprint("guide", __name__)
 
@@ -58,8 +59,8 @@ def about():
 @bp.route("/channels", methods=["GET"])
 def channels():
     try:
-        st = Station.query.all()
-        return render_template("tvchannels.html", st=st)
+        st = Station.query.order_by(Station.channelnumber.asc()).all()
+        return render_template("tvchannels.html", chans=st)
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 
@@ -67,8 +68,13 @@ def channels():
 @bp.route("/channel", methods=["GET"])
 def channel():
     try:
-        chanid = "" if "chanid" not in request.args else request.args["chanid"]
-        return render_template("tvchannel.html", chanid=chanid)
+        chanid = "0" if "chanid" not in request.args else request.args["chanid"]
+        offset = 0 if "offset" not in request.args else int(request.args["offset"])
+        p, today, days = channelSchedule(chanid, offset=offset)
+        xchan = Station.query.filter_by(stationid=request.args["chanid"]).first()
+        return render_template(
+            "channel.html", progs=p, chan=xchan, today=today, days=days
+        )
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 
