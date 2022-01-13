@@ -402,7 +402,10 @@ def cleanSchedule():
     try:
         yesterday = int(time.time()) - 86400
         n = Schedule.query.count()
-        dn = Schedule.query.delete(Schedule.airdate < yesterday)
+        old = Schedule.query.filter_by(airdate < yesterday).all()
+        dn = len(old)
+        [db.session.delete(x) for x in old]
+        db.session.commit()
         log.info(f"Cleaned {dn} rows from {n} Schedules.")
     except Exception as e:
         errorExit(sys.exc_info()[2], e)
