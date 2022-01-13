@@ -21,6 +21,7 @@ import os
 from pathlib import Path
 from pprint import pprint
 import sys
+import time
 
 
 from tvguide import makeApp, db, log, errorNotify, errorExit
@@ -326,6 +327,7 @@ def addSchedule(sd, sched):
 
 def schedules(sd):
     try:
+        cleanSchedule()
         log.info("Retrieving schedule hashes")
         xdat = schedulesMd5(sd)
         log.info(f"require schedules for {len(xdat)} channels")
@@ -396,13 +398,29 @@ def linupRefresh(sd, cfg):
         errorNotify(sys.exc_info()[2], e)
 
 
+def cleanSchedule():
+    try:
+        yesterday = int(time.time()) - 86400
+        n = Schedule.query.count()
+        dn = Schedule.query.delete(airdate < yesterday)
+        log.info(f"Cleaned {dn} rows from {n} Schedules.")
+    except Exception as e:
+        errorExit(sys.exc_info()[2], e)
+
+
+def forceScheduleUpdate():
+    try:
+        n = Schedule.query.delete()
+        log.info(f"deleted {n} rows from Schedule")
+        db.session.commit()
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
 def forceMd5Update():
     try:
         n = Schedulemd5.query.delete()
         log.info(f"deleted {n} rows from ScheduleMd5")
-        db.session.commit()
-        n = Schedule.query.delete()
-        log.info(f"deleted {n} rows from Schedule")
         db.session.commit()
     except Exception as e:
         errorExit(sys.exc_info()[2], e)
@@ -427,7 +445,7 @@ def makeSD(cfg):
         errorExit(sys.exc_info()[2], e)
 
 
-def updateDB():
+def updateDB(fmd5=False, fsched=False):
     try:
         with app.app_context():
             dbpath = Path(app.config["DATABASE"])
@@ -443,7 +461,10 @@ def updateDB():
             log.debug("Alls good, sd is online")
             linupRefresh(sd, cfg)
 
-            # forceMd5Update()
+            if fmd5:
+                forceMd5Update()
+            if fsched:
+                forceScheduleUpdate()
 
             schedules(sd)
 
@@ -458,7 +479,13 @@ def updateDB():
 if __name__ == "__main__":
     # flask has already set warning level
     log.setLevel(logging.INFO)
+    fmd5 = fsched = False
     if len(sys.argv) > 1:
-        if sys.argv[1] == "v":
-            log.setLevel(logging.DEBUG)
-    updateDB()
+        for i in range(1, len(sys.argv)):
+            if sys.argv[i] == "v":
+                log.setLevel(logging.DEBUG)
+            if sys.argv[i] == "f":
+                fmd5 = True
+            if sys.argv[i] == "s":
+                fsched = True
+    updateDB(fmd5=fmd5, fsched=fsched)
