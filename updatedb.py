@@ -105,7 +105,7 @@ def setProgData(eprog, prog):
             )
         eprog.originalairdate = prog["originalAirDate"]
         if "metadata" in prog:
-            eprog.series, prog.episode = extractSeries(prog["metadata"])
+            eprog.series, eprog.episode = extractSeries(prog["metadata"])
         return eprog
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
@@ -303,7 +303,7 @@ def addSchedule(sd, sched):
                 s.duration = int(prog["duration"])
                 log.debug(f"update schedule: {kwargs=}")
             else:
-                kwargs = {"md5": prog["md5"]}
+                kwargs["md5"] = prog["md5"]
                 kwargs["duration"] = int(prog["duration"])
                 log.debug(f"addSchedule: {kwargs=}")
                 s = Schedule(**kwargs)
@@ -402,7 +402,7 @@ def cleanSchedule():
     try:
         yesterday = int(time.time()) - 86400
         n = Schedule.query.count()
-        old = Schedule.query.filter_by(airdate < yesterday).all()
+        old = Schedule.query.filter(Schedule.airdate < yesterday).all()
         dn = len(old)
         [db.session.delete(x) for x in old]
         db.session.commit()
