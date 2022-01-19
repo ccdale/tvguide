@@ -37,6 +37,8 @@ class Station(db.Model):
     logid = db.Column(db.Integer, nullable=True)
     source = db.Column(db.String(64), nullable=True)
     channelnumber = db.Column(db.Integer, nullable=True)
+    getdata = db.Column(db.Integer, nullable=True, default=1)
+    favourite = db.Column(db.Integer, nullable=True, default=0)
 
     def __repr__(self):
         return f"Station(name='{self.name}')"

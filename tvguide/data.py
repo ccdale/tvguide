@@ -124,3 +124,10 @@ def channelSchedule(chanid, offset=0, duration=86400):
     except Exception as e:
         log.debug(get_debug_queries())
         errorNotify(sys.exc_info()[2], e)
+
+
+def doSearch(search):
+    try:
+        pass
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
