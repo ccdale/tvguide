@@ -448,7 +448,7 @@ def makeSD(cfg):
         errorExit(sys.exc_info()[2], e)
 
 
-def updateDB(fmd5=False, fsched=False, changedb=changedb):
+def updateDB(fmd5=False, fsched=False, changedb=False):
     try:
         with app.app_context():
             dbpath = Path(app.config["DATABASE"])
