@@ -448,13 +448,16 @@ def makeSD(cfg):
         errorExit(sys.exc_info()[2], e)
 
 
-def updateDB(fmd5=False, fsched=False):
+def updateDB(fmd5=False, fsched=False, changedb=changedb):
     try:
         with app.app_context():
             dbpath = Path(app.config["DATABASE"])
             log.debug(f"looking for database at: {dbpath}")
             # if we've changed the models then (re)create the tables
             db.create_all()
+            if changedb:
+                print("db settings changed")
+                sys.exit(0)
             if not dbpath.is_file():
                 raise Exception(f"failed to find a database at: {dbpath}")
             log.debug(f"I'm here so the dbpath must be correct {dbpath}")
@@ -482,13 +485,15 @@ def updateDB(fmd5=False, fsched=False):
 if __name__ == "__main__":
     # flask has already set warning level
     log.setLevel(logging.INFO)
-    fmd5 = fsched = False
+    kwargs = {"fmd5": False, "fsched": False, "changedb": False}
     if len(sys.argv) > 1:
         for i in range(1, len(sys.argv)):
             if sys.argv[i] == "v":
                 log.setLevel(logging.DEBUG)
             if sys.argv[i] == "f":
-                fmd5 = True
+                kwargs["fmd5"] = True
             if sys.argv[i] == "s":
-                fsched = True
-    updateDB(fmd5=fmd5, fsched=fsched)
+                kwargs["fsched"] = True
+            if sys.argv[i] == "c":
+                kwargs["changedb"] = True
+    updateDB(**kwargs)
