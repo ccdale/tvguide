@@ -495,5 +495,6 @@ if __name__ == "__main__":
             if sys.argv[i] == "s":
                 kwargs["fsched"] = True
             if sys.argv[i] == "c":
+                log.setLevel(logging.DEBUG)
                 kwargs["changedb"] = True
     updateDB(**kwargs)
