@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>TV Guide</h1>
+<h3>{{ chan.name }}</h3>
+<p>{{ today }}</p>
+
+<div class="timelinediv">
+    {% for day in days %}
+    <a class="timelinea" type="button" href="{{ url_for('guide.channel') }}?chanid={{ chan.stationid }}&offset={{ day[0] }}">
+        {{ day[1] }}
+    </a>
+    {% endfor %}
+</div>
+
+<div class="chandaydiv">
+<table class="chandaytable">
+    <tr class="chandayheadrow">
+        <th class="chandayhead">Time</th>
+        <th class="chandayhead">Duration</th>
+        <th class="chandayhead">Title</th>
+        <th class="chandayhead">Episode</th>
+        <th class="chandayhead">Description</th>
+        <th class="chandayhead">Series/Episode</th>
+    </tr>
+    {% for prog in progs %}
+        <tr class="chandayrow" title='{{ prog["longdesc"] }}'>
+            <td class="chandayitem">{{ prog["airdate"] }}</td>
+            <td class="chandayitem">{{ prog["duration"] }}</td>
+            <td class="chandayitem">{{ prog["title"] }}</td>
+            <td class="chandayitem">{{ prog["episodetitle"] }}</td>
+            <td class="chandayitem">{{ prog["shortdesc"] }}</td>
+            <td class="chandayitem">{{ prog["seriesstr"] }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+<div class="timelinediv">
+    {% for day in days %}
+    <a class="timelinea" type="button" href="{{ url_for('guide.channel') }}?chanid={{ chan.stationid }}&offset={{ day[0] }}">
+        {{ day[1] }}
+    </a>
+    {% endfor %}
+</div>
+
+{% endblock content %}

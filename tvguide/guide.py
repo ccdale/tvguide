@@ -79,6 +79,15 @@ def channel():
         errorNotify(sys.exc_info()[2], e)
 
 
+@bp.route("/channeledit", methods=["GET", "POST"])
+def channeledit():
+    try:
+        st = Station.query.order_by(Station.channelnumber.asc()).all()
+        return render_template("channelform.html", chans=st)
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
 @bp.route("/grid", methods=["GET"])
 def grid():
     try:

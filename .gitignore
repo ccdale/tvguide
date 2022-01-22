@@ -10,4 +10,5 @@ docs/_build
 htmlcov
 coverage.xml
 instance/
-*.html
+.kdev4/
+*.kdev4

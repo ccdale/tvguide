@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="navigation">
+</div>
+<h1>Channels Guide</h1>
+<table>
+    <tr>
+        <th>Channel</th>
+        <th>Name</th>
+    </tr>
+{% for chan in chans %}
+<tr>
+    <td>{{ chan.channelnumber }}</td>
+    <td><a href="{{ url_for('guide.channel')}}?chanid={{ chan.stationid }}">{{ chan.name }}</a></tr>
+</tr>
+{% endfor %}
+</table>
+{% endblock content %}

@@ -1,5 +1,58 @@
-div.contentdiv {
-    margin: auto
-    width: 90%
-    padding: 5px 5px 5px 5px
+.container {
+    margin: auto;
+    width: 90%;
+    padding: 5px 5px 5px 5px;
+}
+
+.headcontainer {
+}
+
+.navbutton {
+    text-decoration: none;
+}
+
+.navbutton:hover {
+    text-decoration: underline;
+}
+
+.timelinediv {
+    padding: 15px
+}
+
+
+a.timelinea {
+    text-decoration: none;
+    color: white;
+    background-color: blue;
+    padding: 5px;
+    margin: 2px;
+}
+
+a.timelinea:hover {
+    text-decoration: underline;
+}
+
+.chandaydiv {
+}
+
+.chandaytable {
+}
+
+.chandayheadrow {
+}
+
+.chandayhead {
+}
+
+.chandayrow {
+}
+
+tr.chandayrow:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.chandayitem {
+    text-align: center;
+    padding: 5px 5px 5px 5px;
+    border-bottom: 1px solid blue;
 }

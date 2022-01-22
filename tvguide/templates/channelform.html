@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Channel Configuration.</h1>
+<div class="chanconfigdiv">
+    <table class="chanconfigtable">
+        <tr class="chanconfigheadrow">
+            <th class="chanconfigheaditem">Number</th>
+            <th class="chanconfigheaditem">Name</th>
+            <th class="chanconfigheaditem">Favourite</th>
+            <th class="chanconfigheaditem">Get Data</th>
+        </tr>
+        {% for chan in chans %}
+            {% if chan.favourite == 0: %}
+                {% set favchan = "" %}
+            {% else %}
+                {% set favchan = "checked" %}
+            {% endif %}
+            {% if chan.getdata == 0: %}
+                {% set gdchan = "" %}
+            {% else %}
+                {% set gdchan = "checked" %}
+            {% endif %}
+            <tr class="chanconfigitemrow">
+                <td class="chanconfigitem">{{ chan.channelnumber }}</td>
+                <td class="chanconfigitem">{{ chan.name }}</td>
+                <td class="chanconfigitem">
+                    <input id='{{ f"fav_{chan.stationid}" }}' type=checkbox {{ favchan }}/>
+                </td>
+                <td class="chanconfigitem">
+                    <input id='{{ f"gd_{chan.stationid}" }}' type=checkbox {{ gdchan }}/>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock content %}
