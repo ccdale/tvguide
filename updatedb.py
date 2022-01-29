@@ -358,7 +358,7 @@ def updateChannels(linupdata):
                 kwargs["stationid"] = stationid
                 kwargs["channelnumber"] = rmap[stationid]
                 stat = Station(**kwargs)
-                # log.info(f"Inserting {stat=}")
+                log.debug(f"Inserting {stat=}")
                 db.session.add(stat)
                 docommit = True
                 createdstation += 1
@@ -370,7 +370,7 @@ def updateChannels(linupdata):
                         kwargs = {key: logo[key] for key in llabs}
                         kwargs["url"] = logo["URL"]
                         ologo = Logo(**kwargs)
-                        # log.info(f"Inserting {ologo}")
+                        log.debug(f"Inserting {ologo}")
                         db.session.add(ologo)
                         docommit = True
                         createdlogo += 1
