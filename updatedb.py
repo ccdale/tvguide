@@ -257,14 +257,10 @@ def addUpdateSMD5(sd, smd5, chanid, xdate):
 def schedulesMd5(sd):
     try:
         retrieve = {}
-        clist = Station.query.all()
+        xall = Station.query.all()
+        clist = Station.query.filter_by(getdata=1).all()
+        log.info(f"retrieving MD5 hashes for {len(clist)} / {len(xall)} channels")
         slist = [x.stationid for x in clist]
-
-        # testing
-        # slist = [87840, 50716] # bbc1 and c4
-        # slist = [17154, 16234]  # sky news and bbc2
-        # testing
-
         smd5 = sd.getScheduleMd5(slist)
         for chan in smd5:
             log.debug(f"scheduleMd5: {chan=}")

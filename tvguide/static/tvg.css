@@ -56,3 +56,19 @@ tr.chandayrow:nth-child(even) {
     padding: 5px 5px 5px 5px;
     border-bottom: 1px solid blue;
 }
+
+tr.chanconfigitemrow:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+td.chanconfigright {
+    text-align: right;
+}
+
+td.chanconfigcentre {
+    text-align: center;
+}
+
+td.chanconfigleft {
+    text-align: left;
+}

@@ -33,7 +33,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from tvguide import db, log, errorNotify
 from tvguide.models import Station
-from tvguide.data import channelSchedule, timeLine
+from tvguide.data import channelSchedule, timeLine, generateEdits
 
 bp = Blueprint("guide", __name__)
 
@@ -83,6 +83,9 @@ def channel():
 def channeledit():
     try:
         st = Station.query.order_by(Station.channelnumber.asc()).all()
+        if request.method == "POST":
+            generateEdits(request.form, st)
+            st = Station.query.order_by(Station.channelnumber.asc()).all()
         return render_template("channelform.html", chans=st)
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)

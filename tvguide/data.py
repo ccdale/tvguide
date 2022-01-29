@@ -126,6 +126,90 @@ def channelSchedule(chanid, offset=0, duration=86400):
         errorNotify(sys.exc_info()[2], e)
 
 
+def getNumeric(txt, findfrom="_"):
+    try:
+        return int(txt[txt.index(findfrom) + 1 :])
+    except ValueError as e:
+        log.error(f"input has no numeric component: {txt=}, {findfrom=}")
+        return 0
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
+def channelsById(stations):
+    try:
+        op = {}
+        for chan in stations:
+            op[chan.stationid] = chan
+        return op
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
+def checkFavourite(frmel, chan):
+    try:
+        # we only get form elements when the box is checked
+        # log.debug(f"testing for 'fav' in element {frmel}")
+        if frmel.startswith("fav"):
+            log.debug(f"favourite set on channel {chan.name}")
+            if chan.favourite != 1:
+                log.debug(f"adding favourite {chan.name}")
+                chan.favourite = 1
+                # automatically turn on getdata for a favourite channel
+                chan.getdata = 1
+                db.session.commit()
+            else:
+                log.debug(f"favourite already set for {chan.name} in db.")
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
+def checkGetData(frmel, chan):
+    try:
+        if frmel.startswith("gd"):
+            if chan.getdata != 1:
+                log.debug(f"adding getdata {chan.name}")
+                chan.getdata = 1
+                db.session.commit()
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
+def setZero(xchans):
+    try:
+        for chan in xchans:
+            changed = False
+            if chan.favourite != 0:
+                chan.favourite = 0
+                changed = True
+                log.debug(f"unsetting favourite for {chan.name}")
+            elif chan.getdata != 0:
+                chan.getdata = 0
+                changed = True
+                log.debug(f"unsetting getdata for {chan.name}")
+            if changed:
+                db.session.commit()
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
+def generateEdits(form, stations):
+    try:
+        updated = []
+        chans = channelsById(stations)
+        for key in form:
+            sid = getNumeric(key)
+            checkGetData(key, chans[sid])
+            checkFavourite(key, chans[sid])
+            updated.append(sid)
+        log.debug(f"{len(updated)} channels changed")
+        xchans = [chans[x] for x in chans if chans[x].stationid not in updated]
+        log.debug(f"checking {len(xchans)} channels for zero (of {len(chans)}")
+        setZero(xchans)
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
 def doSearch(search):
     try:
         pass
