@@ -276,6 +276,24 @@ def schedulesMd5(sd):
         errorNotify(sys.exc_info()[2], e)
 
 
+def removeOverlaps(chanid, start, duration):
+    try:
+        removed = False
+        end = start + duration
+        xs = Schedule.query.filter(
+            Schedule.stationid == chanid,
+            (Schedule.airdate + Schedule.duration) > start,
+            Schedule.airdate < end,
+        ).all()
+        if len(xs) > 0:
+            removed = True
+            [db.session.delete(x) for x in xs]
+            db.session.commit()
+        return removed
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
 def addSchedule(sd, sched):
     try:
         plist = []
@@ -293,14 +311,17 @@ def addSchedule(sd, sched):
                 "stationid": chanid,
                 "airdate": sd.getTimeStamp(prog["airDateTime"]),
             }
+
+            duration = int(prog["duration"])
+            removed = removeOverlaps(chanid, kwargs["airdate"], duration)
             s = Schedule.query.filter_by(**kwargs).first()
-            if s:
+            if s and not removed:
                 s.md5 = prog["md5"]
-                s.duration = int(prog["duration"])
+                s.duration = duration
                 log.debug(f"update schedule: {kwargs=}")
             else:
                 kwargs["md5"] = prog["md5"]
-                kwargs["duration"] = int(prog["duration"])
+                kwargs["duration"] = duration
                 log.debug(f"addSchedule: {kwargs=}")
                 s = Schedule(**kwargs)
                 db.session.add(s)
