@@ -59,7 +59,11 @@ def about():
 @bp.route("/channels", methods=["GET"])
 def channels():
     try:
-        st = Station.query.filter_by(Station.getdata=1).order_by(Station.channelnumber.asc()).all()
+        st = (
+            Station.query.filter_by(Station.getdata == 1)
+            .order_by(Station.channelnumber.asc())
+            .all()
+        )
         return render_template("tvchannels.html", chans=st)
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
