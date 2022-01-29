@@ -6,4 +6,5 @@ DONE when inserting a schedule update delete existing schedule for that time slo
 setup some canned searches: https://www.tutorialspoint.com/sqlalchemy/sqlalchemy_orm_filter_operators.htm
 (see the 'like' section)
 
+make grid for favourite channels
 
