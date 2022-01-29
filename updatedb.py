@@ -365,7 +365,7 @@ def updateChannels(linupdata):
                 existstation += 1
             if "stationLogo" in station:
                 for logo in station["stationLogo"]:
-                    if not Logo.query.filter_by(md5=logo["md5"]).first():
+                    if not Logo.query.filter_by(url=logo["URL"]).first():
                         kwargs = {key: logo[key] for key in llabs}
                         kwargs["url"] = logo["URL"]
                         ologo = Logo(**kwargs)
