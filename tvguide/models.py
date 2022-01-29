@@ -143,7 +143,7 @@ class User(db.Model):
 
 class Logo(db.Model):
     lid = db.Column(db.Integer, primary_key=True)
-    url = db.Column(db.String(256), unique=True, nullable=False)
+    url = db.Column(db.String(256), nullable=False)
     height = db.Column(db.Integer, nullable=True)
     width = db.Column(db.Integer, nullable=True)
     md5 = db.Column(db.String(32), nullable=False)
