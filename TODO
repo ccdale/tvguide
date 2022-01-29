@@ -1,4 +1,4 @@
-only display channels where getdata is set
+DONE only display channels where getdata is set
 
 when inserting a schedule update delete existing schedule for that time slot
 (end of existing is after start of new and start of existing is before end of new)

@@ -60,7 +60,7 @@ def about():
 def channels():
     try:
         st = (
-            Station.query.filter_by(Station.getdata == 1)
+            Station.query.filter_by(getdata=1)
             .order_by(Station.channelnumber.asc())
             .all()
         )
