@@ -350,7 +350,6 @@ def updateChannels(linupdata):
         llabs = ["height", "width", "category", "md5", "source"]
         existstation = createdstation = 0
         existlogo = createdlogo = 0
-        docommit = False
         for station in xdict["stations"]:
             stationid = int(station["stationID"])
             if not Station.query.filter_by(stationid=stationid).first():
@@ -360,7 +359,7 @@ def updateChannels(linupdata):
                 stat = Station(**kwargs)
                 log.debug(f"Inserting {stat=}")
                 db.session.add(stat)
-                docommit = True
+                db.session.commit()
                 createdstation += 1
             else:
                 existstation += 1
@@ -372,12 +371,10 @@ def updateChannels(linupdata):
                         ologo = Logo(**kwargs)
                         log.debug(f"Inserting {ologo}")
                         db.session.add(ologo)
-                        docommit = True
+                        db.session.commit()
                         createdlogo += 1
                     else:
                         existlogo += 1
-        if docommit:
-            db.session.commit()
         log.info(
             f"Channels inserted: {createdstation}, Existing Channels: {existstation}"
         )
