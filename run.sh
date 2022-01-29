@@ -19,6 +19,8 @@
 set -e
 
 # export FLASK_APP=tvguide
-export FLASK_ENV=development
+# export FLASK_ENV=development
+# export FLASK_ENV=testing
+export FLASK_ENV=production
 # poetry run flask run
 poetry run python run.py
