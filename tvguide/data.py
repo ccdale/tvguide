@@ -56,13 +56,13 @@ def dayOfWeek(ts, offset=0):
         errorNotify(sys.exc_info()[2], e)
 
 
-def timeLine():
+def timeLine(ndays=14):
     try:
         d = date.today()
         dts = datetime(d.year, d.month, d.day, 6)
         ts = dts.timestamp()
         oneday = 86400
-        end = 7 * oneday
+        end = ndays * oneday
         days = [(i, dayOfWeek(ts, i)) for i in range(0, end, oneday)]
         return days
     except Exception as e:
@@ -117,7 +117,7 @@ def channelSchedule(chanid, offset=0, duration=86400):
         for sched in scheds:
             if not gotdate:
                 today = dateFromTS(sched.airdate)
-                days = timeLine()
+                days = timeLine(13)
                 gotdate = True
             p = Program.query.filter_by(programid=sched.programid).first()
             progs.append(copyProgSched(p, sched))
