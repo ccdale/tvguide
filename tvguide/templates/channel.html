@@ -24,7 +24,7 @@
     </tr>
     {% for prog in progs %}
         <tr class="chandayrow" title='{{ prog["longdesc"] }}'>
-            <td class="chandayitem">{{ prog["airdate"] }}</td>
+            <td class="chandayitem">{{ prog["airdate"] }} - {{ prog["endtime"] }}</td>
             <td class="chandayitem">{{ prog["duration"] }}</td>
             <td class="chandayitem">{{ prog["title"] }}</td>
             <td class="chandayitem">{{ prog["episodetitle"] }}</td>

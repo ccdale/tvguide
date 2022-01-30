@@ -93,6 +93,7 @@ def copyProgSched(prog, sched):
             "episode": "" if prog.episode is None else prog.episode,
             "airdate": timeFromTS(sched.airdate),
             "duration": hms(sched.duration),
+            "endtime": timeFromTS(sched.airdate + sched.duration),
         }
         return op
     except Exception as e:

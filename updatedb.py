@@ -103,7 +103,8 @@ def setProgData(eprog, prog):
             eprog.shortdesc = extractString(
                 prog["descriptions"]["description100"], "description"
             )
-        eprog.originalairdate = prog["originalAirDate"]
+        if "originalAirDate" in prog:
+            eprog.originalairdate = prog["originalAirDate"]
         if "metadata" in prog:
             eprog.series, eprog.episode = extractSeries(prog["metadata"])
         return eprog
