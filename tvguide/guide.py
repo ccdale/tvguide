@@ -34,6 +34,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from tvguide import db, log, errorNotify
 from tvguide.models import Station
 from tvguide.data import channelSchedule, timeLine, generateEdits
+from tvguide.search import searchTitle
 
 bp = Blueprint("guide", __name__)
 
@@ -43,7 +44,8 @@ log.setLevel(logging.DEBUG)
 @bp.route("/", methods=["GET"])
 def home():
     try:
-        return render_template("tvhome.html")
+        oprogs = []
+        return render_template("tvhome.html", oprogs=oprogs, lenprogs=0)
     except Exception as e:
         return errorNotify(sys.exc_info()[2], e)
 
@@ -91,6 +93,19 @@ def channeledit():
             generateEdits(request.form, st)
             st = Station.query.order_by(Station.channelnumber.asc()).all()
         return render_template("channelform.html", chans=st)
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
+@bp.route("/searchtitle", methods=["POST"])
+def searchtitle():
+    try:
+        oprogs = []
+        for key in request.form:
+            log.info(f"searchtitle: form key {key=}")
+            log.info(f"val: {request.form[key]}")
+            oprogs = searchTitle(request.form[key])
+        return render_template("tvhome.html", oprogs=oprogs, lenprogs=len(oprogs))
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 
