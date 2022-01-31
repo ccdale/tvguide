@@ -2,7 +2,7 @@ from operator import itemgetter
 import sys
 
 from tvguide import log, errorNotify, db
-from tvguide.data import channelsById, timeFromTS, hms
+from tvguide.data import channelsById, timeFromTS, hms, dateFromTS
 from tvguide.models import Schedule, Program, Person, CastMap, Station
 
 
@@ -34,6 +34,7 @@ def searchTitle(search):
                         opd = {"channel": chan.name, "cnum": chan.channelnumber}
                         opd["duration"] = hms(sched.duration)
                         opd["end"] = timeFromTS(sched.airdate + sched.duration)
+                        opd["date"] = dateFromTS(sched.airdate)
                         opd["start"] = timeFromTS(sched.airdate)
                         opd["ts"] = sched.airdate  # needed for sorting later on
                         opd["title"] = prog.title
