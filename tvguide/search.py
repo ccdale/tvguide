@@ -21,12 +21,12 @@ def searchTitle(search):
         progs = Program.query.filter(Program.title.like(f"%{search}%")).all()
         log.info(f"search title for {search}")
         oprogs = []
-        cn = len(progs)
+        cn = 0 if progs is None else len(progs)
         if cn > 0:
             log.debug(f"{cn} programs found")
             for prog in progs:
                 scheds = findScheduleForProgram(prog)
-                cn = len(scheds)
+                cn = 0 if scheds is None else len(scheds)
                 if cn > 0:
                     log.debug(f"{cn} schedules found for {prog.title}")
                     for sched in scheds:
@@ -45,8 +45,12 @@ def searchTitle(search):
                         log.debug(f"no schedules found for {prog.title}")
         else:
             log.info("no program titles found for {search}")
-        f = itemgetter("ts")
-        return oprogs.sort(key=f)
+        log.info(f"searchTitle: type of output: {type(oprogs)}")
+        if len(oprogs):
+            f = itemgetter("ts")
+            oprogs.sort(key=f)
+            log.info(f"after sorting: {type(oprogs)}")
+        return oprogs
         # using itemgetter is cleaner than
         # oprogs.sort(key=lambda item: item.get("ts"))
     except Exception as e:

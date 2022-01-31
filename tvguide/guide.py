@@ -105,6 +105,7 @@ def searchtitle():
             log.info(f"searchtitle: form key {key=}")
             log.info(f"val: {request.form[key]}")
             oprogs = searchTitle(request.form[key])
+            log.info(f"{type(oprogs)} <= type of oprogs")
         return render_template("tvhome.html", oprogs=oprogs, lenprogs=len(oprogs))
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
