@@ -14,12 +14,8 @@ def findScheduleForProgram(prog):
         errorNotify(sys.exc_info()[2], e)
 
 
-def searchTitle(search):
+def schedulesForProgList(progs):
     try:
-        st = Station.query.order_by(Station.channelnumber.asc()).all()
-        chans = channelsById(st)
-        progs = Program.query.filter(Program.title.like(f"%{search}%")).all()
-        log.info(f"search title for {search}")
         oprogs = []
         cn = 0 if progs is None else len(progs)
         if cn > 0:
@@ -43,15 +39,21 @@ def searchTitle(search):
                         oprogs.append(opd)
                     else:
                         log.debug(f"no schedules found for {prog.title}")
-        else:
-            log.info("no program titles found for {search}")
-        log.info(f"searchTitle: type of output: {type(oprogs)}")
         if len(oprogs):
             f = itemgetter("ts")
             oprogs.sort(key=f)
             log.info(f"after sorting: {type(oprogs)}")
         return oprogs
-        # using itemgetter is cleaner than
-        # oprogs.sort(key=lambda item: item.get("ts"))
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
+def searchTitle(search):
+    try:
+        st = Station.query.order_by(Station.channelnumber.asc()).all()
+        chans = channelsById(st)
+        progs = Program.query.filter(Program.title.like(f"%{search}%")).all()
+        oprogs = schedulesForProgList(progs)
+        return oprogs
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)

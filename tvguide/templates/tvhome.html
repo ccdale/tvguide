@@ -4,8 +4,11 @@
 </div>
 <h1>TV Guide</h1>
 <form action="{{ url_for('guide.searchtitle') }}" method="POST">
-    <input type=text name="searchtitleinput"/>
-    <input type=submit value="Search"/>
+    <div class="searchformdiv">
+        Search Titles
+        <input type=text name="searchtitleinput"/>
+        <input type=submit value="Search"/>
+    </div>
 </form>
 
 <div class="foundprograms">
