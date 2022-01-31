@@ -16,6 +16,8 @@ def findScheduleForProgram(prog):
 
 def schedulesForProgList(progs):
     try:
+        st = Station.query.order_by(Station.channelnumber.asc()).all()
+        chans = channelsById(st)
         oprogs = []
         cn = 0 if progs is None else len(progs)
         if cn > 0:
@@ -42,7 +44,7 @@ def schedulesForProgList(progs):
         if len(oprogs):
             f = itemgetter("ts")
             oprogs.sort(key=f)
-            log.info(f"after sorting: {type(oprogs)}")
+            log.debug(f"after sorting: {type(oprogs)}")
         return oprogs
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
@@ -50,8 +52,6 @@ def schedulesForProgList(progs):
 
 def searchTitle(search):
     try:
-        st = Station.query.order_by(Station.channelnumber.asc()).all()
-        chans = channelsById(st)
         progs = Program.query.filter(Program.title.like(f"%{search}%")).all()
         oprogs = schedulesForProgList(progs)
         return oprogs
