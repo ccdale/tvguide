@@ -9,11 +9,20 @@ from tvguide import log, errorNotify, db
 from tvguide.models import Schedule, Program, Person, CastMap, Station
 
 
+def displayIfNotZero(v, label):
+    try:
+        ret = "" if v == 0 else f"{v}{label}"
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
 def hms(dur):
     try:
         hours = int(dur / 3600)
         mins = int((dur % 3600) / 60)
-        return f"{hours:0>2}:{mins:0>2}"
+        h = "" if hours == 0 else f"{hours}h"
+        m = "" if mins == 0 else f"{mins}m"
+        return f"{h} {m}".strip()
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 
