@@ -77,7 +77,7 @@ def searchPerson(search):
         errorNotify(sys.exc_info()[2], e)
 
 
-def searchPeopleProgs(search):
+def searchPersonProgs(personid):
     try:
         if search is not None and len(search) > 3:
             pass
