@@ -34,7 +34,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from tvguide import db, log, errorNotify
 from tvguide.models import Station
 from tvguide.data import channelSchedule, timeLine, generateEdits
-from tvguide.search import searchTitle
+from tvguide.search import searchTitle, searchPerson, searchPeopleProgs
 
 bp = Blueprint("guide", __name__)
 
@@ -44,8 +44,15 @@ log.setLevel(logging.DEBUG)
 @bp.route("/", methods=["GET"])
 def home():
     try:
-        oprogs = []
-        return render_template("tvhome.html", oprogs=oprogs, lenprogs=0)
+        kwargs = {
+            "oprogs": [],
+            "lenprogs": 0,
+            "people": [],
+            "lenpeople": 0,
+            "personprogs": [],
+            "lenpersonprogs": 0,
+        }
+        return render_template("tvhome.html", **kwargs)
     except Exception as e:
         return errorNotify(sys.exc_info()[2], e)
 
@@ -100,13 +107,40 @@ def channeledit():
 @bp.route("/searchtitle", methods=["POST"])
 def searchtitle():
     try:
-        oprogs = []
-        for key in request.form:
-            log.info(f"searchtitle: form key {key=}")
-            log.debug(f"val: {request.form[key]}")
-            oprogs = searchTitle(request.form[key])
-            log.debug(f"{type(oprogs)} <= type of oprogs")
-        return render_template("tvhome.html", oprogs=oprogs, lenprogs=len(oprogs))
+        oprogs = people = pprogs = []
+        if "searchtitleinput" in request.form:
+            oprogs = searchTitle(request.form["searchtitleinput"])
+        if "searchpeopleinput" in request.form:
+            people = searchPerson(request.form["searchpeopleinput"])
+        if "searchprogspeopleinput" in request.form:
+            pprogs = searchPeopleProgs(request.form["searchprogspeopleinput"])
+        kwargs = {
+            "oprogs": oprogs,
+            "lenprogs": len(oprogs),
+            "people": people,
+            "lenpeople": len(people),
+            "personprogs": pprogs,
+            "lenpersonprogs": len(pprogs),
+        }
+        return render_template("tvhome.html", **kwargs)
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
+@bp.route("/searchperson", methods=["GET"])
+def searchperson():
+    try:
+        personid = request.args.get("personid", None)
+        kwargs = {"pprogs": [], "lenpprogs": 0}
+        kwargs = {
+            "oprogs": [],
+            "lenprogs": 0,
+            "people": [],
+            "lenpeople": 0,
+            "personprogs": [],
+            "lenpersonprogs": 0,
+        }
+        return render_template("tvhome.html", **kwargs)
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 

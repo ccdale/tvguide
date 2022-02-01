@@ -4,37 +4,15 @@
 </div>
 <h1>TV Guide</h1>
 <form action="{{ url_for('guide.searchtitle') }}" method="POST">
-    <div class="searchformdiv">
+    <div class="searchtitlediv">
         Search Titles
         <input type=text name="searchtitleinput"/>
         <input type=submit value="Search"/>
     </div>
+    <div class="searchpersondiv">
+        Search People
+        <input type=text name="searchpeopleinput"/>
+        <input type=submit value="Search"/>
+    </div>
 </form>
-
-<div class="foundprograms">
-    {% if lenprogs > 0 %}
-        <table class="foundtable">
-            <tr class="foundrow">
-                <th class="foundhead">Channel Number</th>
-                <th class="foundhead">Channel</th>
-                <th class="foundhead">Date</th>
-                <th class="foundhead">Time</th>
-                <th class="foundhead">Duration</th>
-                <th class="foundhead">Title</th>
-                <th class="foundhead">Description</th>
-            </tr>
-            {% for prog in oprogs %}
-                <tr class="foundrow" title='{{ prog["longdesc"] }}'>
-                    <td class="founditem">{{ prog["cnum"] }}</td>
-                    <td class="founditem">{{ prog["channel"] }}</td>
-                    <td class="founditem">{{ prog["date"] }}</td>
-                    <td class="founditem">{{ prog["start"] }} - {{ prog["end"] }}</td>
-                    <td class="founditem">{{ prog["duration"] }}</td>
-                    <td class="founditem">{{ prog["title"] }}</td>
-                    <td class="founditem">{{ prog["shortdesc"] }}</td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% endif %}
-</div>
 {% endblock content %}

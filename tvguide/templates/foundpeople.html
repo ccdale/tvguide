@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="navigation">
+</div>
+<h1>TV Guide</h1>
+<div class="foundpeople">
+    {% if lenpeople > 0 %}
+        {% for person in people %}
+            <p><a class"foundpersonlink" href="{{ url_for('guide.searchperson') }}?personid={{ person['personid'] }}">{{ person["name"] }}</a></p>
+        {% endfor %}
+    {% else %}
+        <p>No people found<p>
+    {% endif %}
+</div>
+{% endblock content %}

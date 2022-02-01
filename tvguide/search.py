@@ -52,8 +52,37 @@ def schedulesForProgList(progs):
 
 def searchTitle(search):
     try:
-        progs = Program.query.filter(Program.title.like(f"%{search}%")).all()
-        oprogs = schedulesForProgList(progs)
+        if search is not None and len(search) > 3:
+            progs = Program.query.filter(Program.title.like(f"%{search}%")).all()
+            oprogs = schedulesForProgList(progs)
+        else:
+            oprogs = []
         return oprogs
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
+def searchPerson(search):
+    try:
+        if search is not None and len(search) > 3:
+            persons = Person.query.filter(Person.name.like(f"%{search}%")).all()
+            op = [
+                {"personid": x.personid, "name": x.name, "nameid": x.nameid}
+                for x in persons
+            ]
+        else:
+            op = []
+        return op
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
+def searchPeopleProgs(search):
+    try:
+        if search is not None and len(search) > 3:
+            pass
+        else:
+            op = []
+        return op
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
