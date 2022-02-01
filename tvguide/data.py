@@ -242,9 +242,8 @@ def gridProgs(offset=0, width=7200):
                 "programmes": progs,
                 "today": today,
                 "days": days,
-                "xmin": xmin,
             }
             grid.append(gridline)
-        return grid
+        return grid, xmin
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
