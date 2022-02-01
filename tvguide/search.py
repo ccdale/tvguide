@@ -65,7 +65,11 @@ def searchTitle(search):
 def searchPerson(search):
     try:
         if search is not None and len(search) > 3:
-            persons = Person.query.filter(Person.name.like(f"%{search}%")).all()
+            persons = (
+                Person.query.filter(Person.name.like(f"%{search}%"))
+                .order_by(Person.name.asc())
+                .all()
+            )
             op = [
                 {"personid": x.personid, "name": x.name, "nameid": x.nameid}
                 for x in persons
@@ -79,8 +83,11 @@ def searchPerson(search):
 
 def searchPersonProgs(personid):
     try:
-        if search is not None and len(search) > 3:
-            pass
+        if personid is not None and len(personid) > 3:
+            cms = CastMap.query.filter_by(personid=personid).all()
+            progids = [x.programid for x in cms]
+            progs = Program.query.filter(Program.programid.in_(progids)).all()
+            op = schedulesForProgList(progs)
         else:
             op = []
         return op

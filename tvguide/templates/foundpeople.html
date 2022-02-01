@@ -9,7 +9,7 @@
             <p><a class"foundpersonlink" href="{{ url_for('guide.searchperson') }}?personid={{ person['personid'] }}">{{ person["name"] }}</a></p>
         {% endfor %}
     {% else %}
-        <p>No people found<p>
+        <p>No-one found<p>
     {% endif %}
 </div>
 {% endblock content %}

@@ -9,6 +9,8 @@
         <input type=text name="searchtitleinput"/>
         <input type=submit value="Search"/>
     </div>
+</form>
+<form action="{{ url_for('guide.searchpeople') }}" method="POST">
     <div class="searchpersondiv">
         Search People
         <input type=text name="searchpeopleinput"/>
