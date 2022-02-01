@@ -226,6 +226,7 @@ def generateEdits(form, stations):
 def gridProgs(offset=0, width=7200):
     try:
         grid = []
+        xmin = 86400
         kwargs = {"offset": offset, "duration": width}
         stations = (
             Station.query.filter_by(favourite=1)
@@ -233,7 +234,9 @@ def gridProgs(offset=0, width=7200):
             .all()
         )
         for station in stations:
-            progs, today, days, xmin = channelSchedule(station.stationid, **kwargs)
+            progs, today, days, cmin = channelSchedule(station.stationid, **kwargs)
+            if cmin < xmin:
+                xmin = cmin
             gridline = {
                 "channel": station,
                 "programmes": progs,
