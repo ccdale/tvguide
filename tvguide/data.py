@@ -111,6 +111,7 @@ def copyProgSched(prog, sched):
 
 def channelSchedule(chanid, offset=0, duration=86400):
     try:
+        xmin = 86400
         xstart = int(time.time()) + offset
         scheds = (
             Schedule.query.filter(
@@ -129,8 +130,10 @@ def channelSchedule(chanid, offset=0, duration=86400):
                 days = timeLine(13)
                 gotdate = True
             p = Program.query.filter_by(programid=sched.programid).first()
+            if p.duration < xmin:
+                xmin = p.duration
             progs.append(copyProgSched(p, sched))
-        return (progs, today, days)
+        return (progs, today, days, xmin)
     except Exception as e:
         log.debug(get_debug_queries())
         errorNotify(sys.exc_info()[2], e)
@@ -220,8 +223,25 @@ def generateEdits(form, stations):
         errorNotify(sys.exc_info()[2], e)
 
 
-def doSearch(search):
+def gridProgs(offset=0, width=7200):
     try:
-        pass
+        grid = []
+        kwargs = {"offset": offset, "duration": width}
+        stations = (
+            Station.query.filter_by(favourite=1)
+            .order_by(Station.channelnumber.asc())
+            .all()
+        )
+        for station in stations:
+            progs, today, days, xmin = channelSchedule(station.stationid, **kwargs)
+            gridline = {
+                "channel": station,
+                "programmes": progs,
+                "today": today,
+                "days": days,
+                "xmin": xmin,
+            }
+            grid.append(gridline)
+        return grid
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)

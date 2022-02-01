@@ -76,7 +76,7 @@ def channel():
     try:
         chanid = "0" if "chanid" not in request.args else request.args["chanid"]
         offset = 0 if "offset" not in request.args else int(request.args["offset"])
-        p, today, days = channelSchedule(chanid, offset=offset)
+        p, today, days, xmin = channelSchedule(chanid, offset=offset)
         xchan = Station.query.filter_by(stationid=request.args["chanid"]).first()
         return render_template(
             "channel.html", progs=p, chan=xchan, today=today, days=days
