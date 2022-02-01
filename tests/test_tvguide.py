@@ -2,4 +2,4 @@ from tvguide import __version__
 
 
 def test_version():
-    assert __version__ == "0.3.22"
+    assert __version__ == "0.3.23"
