@@ -2,8 +2,9 @@ from operator import itemgetter
 import sys
 
 from tvguide import log, errorNotify, db
-from tvguide.data import channelsById, timeFromTS, hms, dateFromTS
+from tvguide.data import channelsById
 from tvguide.models import Schedule, Program, Person, CastMap, Station
+from tvguide.time import hms, timeFromTS, dateFromTS
 
 
 def findScheduleForProgram(prog):
