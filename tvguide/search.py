@@ -50,14 +50,12 @@ def schedulesForProgList(progs):
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 
+
 def searchString(search):
     try:
         cn = len(search)
         if cn == 0:
             return None
-        if cn < 4:
-            ss = f"{search}%"
-        else:
         ss = f"{search}%" if cn < 4 else f"%{search}%"
         return ss
     except Exception as e:
