@@ -66,3 +66,13 @@ def timeLine(ndays=14):
         return days
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
+
+
+def alignTime(offset, alignment=3600):
+    try:
+        now = int(time.time())
+        then = now + offset
+        align = then - (then % alignment)
+        return align
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)

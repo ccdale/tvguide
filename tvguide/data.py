@@ -70,8 +70,8 @@ def channelSchedule(chanid, offset=0, duration=86400):
                 days = timeLine(13)
                 gotdate = True
             p = Program.query.filter_by(programid=sched.programid).first()
-            if p.duration < xmin:
-                xmin = p.duration
+            if sched.duration < xmin:
+                xmin = sched.duration
             progs.append(copyProgSched(p, sched))
         return (progs, today, days, xmin)
     except Exception as e:
