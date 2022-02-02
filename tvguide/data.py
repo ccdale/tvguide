@@ -7,7 +7,7 @@ from flask_sqlalchemy import get_debug_queries
 
 from tvguide import log, errorNotify, db
 from tvguide.models import Schedule, Program, Person, CastMap, Station
-from tvguide.time import hms, timeFromTS, dateFromTS, timeLine
+from tvguide.time import hms, timeFromTS, dateFromTS, timeLine, alignTime
 
 
 def displayIfNotZero(v, label):
@@ -52,7 +52,8 @@ def copyProgSched(prog, sched):
 def channelSchedule(chanid, offset=0, duration=86400):
     try:
         xmin = 86400
-        xstart = int(time.time()) + offset
+        # xstart = int(time.time()) + offset
+        xstart = alignTime(offset)
         scheds = (
             Schedule.query.filter(
                 Schedule.stationid == chanid,
