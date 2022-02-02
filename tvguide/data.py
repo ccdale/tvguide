@@ -57,7 +57,7 @@ def channelSchedule(chanid, offset=0, duration=86400):
         scheds = (
             Schedule.query.filter(
                 Schedule.stationid == chanid,
-                Schedule.airdate > xstart,
+                Schedule.airdate + Schedule.duration > xstart,
                 Schedule.airdate < xstart + duration,
             )
             .order_by(Schedule.airdate)
