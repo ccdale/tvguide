@@ -5,6 +5,8 @@ DONE when inserting a schedule update delete existing schedule for that time slo
 
 DONE show end time on daily channel display
 
+allow saving searches
+
 setup some canned searches: https://www.tutorialspoint.com/sqlalchemy/sqlalchemy_orm_filter_operators.htm
 (see the 'like' section)
 
