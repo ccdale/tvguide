@@ -68,9 +68,9 @@ def timeLine(ndays=14):
         errorNotify(sys.exc_info()[2], e)
 
 
-def alignTime(offset, alignment=3600):
+def alignTime(offset, ts=None, alignment=3600):
     try:
-        now = int(time.time())
+        now = int(time.time()) if ts is None else ts
         then = now + offset
         align = then - (then % alignment)
         return align
