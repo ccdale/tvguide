@@ -54,6 +54,8 @@ def channelSchedule(chanid, offset=0, duration=86400):
         xmin = 86400
         # xstart = int(time.time()) + offset
         xstart = alignTime(offset)
+        # find programmes that end after the start point
+        # and begin before the end point
         scheds = (
             Schedule.query.filter(
                 Schedule.stationid == chanid,
