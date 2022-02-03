@@ -20,7 +20,7 @@ def hms(dur):
 def timeFromTS(ts):
     try:
         d = datetime.fromtimestamp(ts)
-        log.debug(f"timeFromTS: {ts=}, {d=}")
+        # log.debug(f"timeFromTS: {ts=}, {d=}")
         return d.strftime("%H:%M")
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
