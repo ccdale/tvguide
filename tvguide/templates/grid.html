@@ -7,7 +7,9 @@
     <table class="gridtable">
         {% for gl in gridlines %}
             <tr class="gridrow">
-                <td class="griditem">{{ gl["channel"] }}</td>
+                <td class="griditem">
+                    <a href="{{ url_for('guide.channel') }}?chanid={{ gl["channel"].stationid }}">{{ gl["channel"].name }}</a>
+                </td>
                 {% for p in gl["programmes"] %}
                     <td class="griditem">{{ p["title"] }}</td>
                 {% endfor %}

@@ -419,7 +419,8 @@ def linupRefresh(sd, cfg):
 
 def cleanSchedule():
     try:
-        yesterday = int(time.time()) - 86400
+        # 7 days old schedules now, to facilitate catch up
+        yesterday = int(time.time()) - (86400 * 7)
         n = Schedule.query.count()
         old = Schedule.query.filter(Schedule.airdate < yesterday).all()
         dn = len(old)
