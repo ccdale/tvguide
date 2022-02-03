@@ -33,7 +33,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from tvguide import db, log, errorNotify
 from tvguide.models import Station
-from tvguide.data import channelSchedule, generateEdits
+from tvguide.data import channelSchedule, generateEdits, gridProgs
 from tvguide.search import searchTitle, searchPerson, searchPersonProgs
 from tvguide.time import timeLine
 
@@ -138,6 +138,7 @@ def searchperson():
 @bp.route("/grid", methods=["GET"])
 def grid():
     try:
+        gridlines, xmin = gridProgs()
         return render_template("tvhome.html")
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
