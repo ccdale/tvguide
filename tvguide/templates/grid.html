@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="navigation">
+</div>
+<h1>TV Guide</h1>
+<div class="griddiv">
+    <table class="gridtable">
+        {% for gl in gridlines %}
+            <tr class="gridrow">
+                <td class="griditem">{{ gl["channel"] }}</td>
+                {% for p in gl["programmes"] %}
+                    <td class="griditem">{{ p["title"] }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock content %}

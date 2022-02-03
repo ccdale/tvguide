@@ -178,7 +178,7 @@ def gridProgs(offset=0, width=7200):
             .all()
         )
         for station in stations:
-            progs, today, days, cmin = channelSchedule(station.stationid, **kwargs)
+            progs, today, days, dow, cmin = channelSchedule(station.stationid, **kwargs)
             if cmin < xmin:
                 xmin = cmin
             gridline = {
