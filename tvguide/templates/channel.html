@@ -6,9 +6,13 @@
 
 <div class="timelinediv">
     {% for day in days %}
+        {% if dow == day[1] %}
+            <span class="timelinespan">{{ day[1] }}</span>
+        {% else %}
     <a class="timelinea" type="button" href="{{ url_for('guide.channel') }}?chanid={{ chan.stationid }}&offset={{ day[0] }}">
         {{ day[1] }}
     </a>
+        {% endif %}
     {% endfor %}
 </div>
 
@@ -36,9 +40,13 @@
 
 <div class="timelinediv">
     {% for day in days %}
+        {% if dow == day[1] %}
+            <span class="timelinespan">{{ day[1] }}</span>
+        {% else %}
     <a class="timelinea" type="button" href="{{ url_for('guide.channel') }}?chanid={{ chan.stationid }}&offset={{ day[0] }}">
         {{ day[1] }}
     </a>
+        {% endif %}
     {% endfor %}
 </div>
 

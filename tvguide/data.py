@@ -7,7 +7,7 @@ from flask_sqlalchemy import get_debug_queries
 
 from tvguide import log, errorNotify, db
 from tvguide.models import Schedule, Program, Person, CastMap, Station
-from tvguide.time import hms, timeFromTS, dateFromTS, timeLine, alignTime
+from tvguide.time import hms, timeFromTS, dateFromTS, timeLine, alignTime, dayOfWeek
 
 
 def displayIfNotZero(v, label):
@@ -66,17 +66,18 @@ def channelSchedule(chanid, offset=0, duration=86400):
             .all()
         )
         progs = []
-        gotdate = today = False
+        gotdate = today = dow = False
         for sched in scheds:
             if not gotdate:
                 today = dateFromTS(sched.airdate)
                 days = timeLine(13)
+                dow = dayOfWeek(sched.airdate)
                 gotdate = True
             p = Program.query.filter_by(programid=sched.programid).first()
             if sched.duration < xmin:
                 xmin = sched.duration
             progs.append(copyProgSched(p, sched))
-        return (progs, today, days, xmin)
+        return (progs, today, days, dow, xmin)
     except Exception as e:
         log.debug(get_debug_queries())
         errorNotify(sys.exc_info()[2], e)
