@@ -70,7 +70,7 @@ def channelSchedule(chanid, offset=0, duration=86400):
         for sched in scheds:
             if not gotdate:
                 today = dateFromTS(sched.airdate)
-                days = timeLine(13)
+                days = timeLine(7)
                 dow = dayOfWeek(sched.airdate)
                 gotdate = True
             p = Program.query.filter_by(programid=sched.programid).first()
