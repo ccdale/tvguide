@@ -76,3 +76,17 @@ td.chanconfigcentre {
 td.chanconfigleft {
     text-align: left;
 }
+
+td.griditem {
+    overflow: hidden;
+    width: 90%;
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+}
+
+td.gridtime {
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
