@@ -139,6 +139,6 @@ def searchperson():
 def grid():
     try:
         gridlines, xmin = gridProgs()
-        return render_template("grid.html")
+        return render_template("grid.html", gridlines=gridlines, xmin=xmin)
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
