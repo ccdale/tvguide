@@ -155,15 +155,8 @@ class Logo(db.Model):
 
 class Search(db.Model):
     sid = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String(128), nullable=False)
-    stype = db.Column(db.Integer, nullable=False)
+    searchfor = db.Column(db.String(128), nullable=False)
+    searchtype = db.Column(db.String(30), nullable=False)
 
     def __repr__(self):
-        return f"Search(text={self.text}, type={self.type))"
-
-class SearchType(db.Model):
-    stid = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(128), nullable=False)
-
-    def __repr__(self):
-        return f"SearchType(name={self.name}, type={self.stid})"
+        return f"Search(searchfor={self.searchfor}, type={self.searchtype))"
