@@ -102,26 +102,61 @@ def channeledit():
 def searchtitle():
     try:
         oprogs = []
-        search = request.form["searchtitleinput"]
-        if "searchtitleinput" in request.form:
-            oprogs = searchTitle(search)
+        log.debug(f"{request.form=}")
+        search = request.form.get("searchtitleinput", "wibble")
+        stype = request.form.get("searchtype", "title")
+        if stype == "title":
+            return doSearchTitle(search)
+        elif stype == "fulltext":
+            pass
+        elif stype == "person":
+            return doSearchPeople(search)
+
+        # search = request.form["searchtitleinput"]
+        # if "searchtitleinput" in request.form:
+        #     oprogs = searchTitle(search)
+        # kwargs = {"oprogs": oprogs, "lenprogs": len(oprogs), "search": search}
+        # return render_template("foundprogs.html", **kwargs)
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
+def doSearchTitle(search):
+    try:
+        oprogs = searchTitle(search)
         kwargs = {"oprogs": oprogs, "lenprogs": len(oprogs), "search": search}
         return render_template("foundprogs.html", **kwargs)
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 
 
-@bp.route("/searchpeople", methods=["POST"])
-def searchpeople():
+def doSearchPeople(search):
     try:
-        people = []
-        search = request.form["searchpeopleinput"]
-        if "searchpeopleinput" in request.form:
-            people = searchPerson(search)
+        people = searchPerson(search)
         kwargs = {"people": people, "lenpeople": len(people), "search": search}
         return render_template("foundpeople.html", **kwargs)
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
+
+
+def doFullTextSearch(search):
+    try:
+        pass
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
+# @bp.route("/searchpeople", methods=["POST"])
+# def searchpeople():
+#     try:
+#         people = []
+#         search = request.form["searchpeopleinput"]
+#         if "searchpeopleinput" in request.form:
+#             people = searchPerson(search)
+#         kwargs = {"people": people, "lenpeople": len(people), "search": search}
+#         return render_template("foundpeople.html", **kwargs)
+#     except Exception as e:
+#         errorNotify(sys.exc_info()[2], e)
 
 
 @bp.route("/searchperson", methods=["GET"])

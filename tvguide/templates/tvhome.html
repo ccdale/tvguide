@@ -5,15 +5,11 @@
 <h1>TV Guide</h1>
 <form action="{{ url_for('guide.searchtitle') }}" method="POST">
     <div class="searchtitlediv">
-        Search Titles
+        Search
         <input type=text name="searchtitleinput"/>
-        <input type=submit value="Search"/>
-    </div>
-</form>
-<form action="{{ url_for('guide.searchpeople') }}" method="POST">
-    <div class="searchpersondiv">
-        Search People
-        <input type=text name="searchpeopleinput"/>
+        <input type="radio" name="searchtype" value="title" id="stitle" checked>Title Search</input>
+        <input type="radio" name="searchtype" value="fulltext" id="sfulltext">Full Text Search</input>
+        <input type="radio" name="searchtype" value="person" id="sperson">Person Search</input>
         <input type=submit value="Search"/>
     </div>
 </form>
