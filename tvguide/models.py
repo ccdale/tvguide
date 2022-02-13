@@ -153,10 +153,11 @@ class Logo(db.Model):
     def __repr__(self):
         return f"Logo(url={self.url})"
 
+
 class Search(db.Model):
     sid = db.Column(db.Integer, primary_key=True)
     searchfor = db.Column(db.String(128), nullable=False)
     searchtype = db.Column(db.String(30), nullable=False)
 
     def __repr__(self):
-        return f"Search(searchfor={self.searchfor}, type={self.searchtype))"
+        return f"Search(searchfor={self.searchfor}, type={self.searchtype})"
