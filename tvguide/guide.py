@@ -108,7 +108,7 @@ def searchtitle():
         if stype == "title":
             return doSearchTitle(search)
         elif stype == "fulltext":
-            pass
+            doFullTextSearch(search)
         elif stype == "person":
             return doSearchPeople(search)
 
