@@ -56,8 +56,23 @@ def searchString(search):
         cn = len(search)
         if cn == 0:
             return None
-        ss = f"{search}%" if cn < 4 else f"%{search}%"
-        return ss
+        return f"{search}%" if cn < 4 else f"%{search}%"
+    except Exception as e:
+        errorNotify(sys.exc_info()[2], e)
+
+
+def searchAll(search):
+    try:
+        ss = searchString(search)
+        if ss is not None:
+            progs = Program.query.filter(Program.shortdesc.like(ss)).all()
+            progs.extend(Program.query.filter(Program.longdesc.like(ss)).all())
+            progs.extend(Program.query.filter(Program.title.like(ss)).all())
+            progs = set(progs)
+            oprogs = schedulesForProgList(progs)
+        else:
+            oprogs = []
+        return oprogs
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 
