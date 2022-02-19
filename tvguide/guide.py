@@ -34,7 +34,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from tvguide import db, log, errorNotify
 from tvguide.models import Station
 from tvguide.data import channelSchedule, generateEdits, gridProgs
-from tvguide.search import searchTitle, searchPerson, searchPersonProgs
+from tvguide.search import searchTitle, searchPerson, searchPersonProgs, searchAll
 from tvguide.time import timeLine
 
 bp = Blueprint("guide", __name__)
@@ -141,7 +141,9 @@ def doSearchPeople(search):
 
 def doFullTextSearch(search):
     try:
-        pass
+        oprogs = searchAll(search)
+        kwargs = {"oprogs": oprogs, "lenprogs": len(oprogs), "search": search}
+        return render_template("foundprogs.html", **kwargs)
     except Exception as e:
         errorNotify(sys.exc_info()[2], e)
 
