@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tvguide"
-version = "0.3.41"
+version = "0.3.42"
 description = "Schedules Direct based Television Guide."
 authors = ["ccdale <chris.charles.allison+tvguide@gmail.com>"]
 readme = "README.md"
